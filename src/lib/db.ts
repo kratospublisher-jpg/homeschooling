@@ -122,3 +122,62 @@ export async function getAllTopicProgress(childId: string): Promise<TopicProgres
   if (error) { console.error(error); return []; }
   return (data || []) as TopicProgressRecord[];
 }
+
+// Schedule completions — tracks which blocks a child completed on a given day
+export interface ScheduleCompletion {
+  child_id: string;
+  date: string;
+  block_id: string;
+  completed_at: string;
+}
+
+export async function getScheduleCompletions(childId: string, date?: string): Promise<string[]> {
+  const d = date || todayDate();
+  const { data, error } = await supabase
+    .from("schedule_completions")
+    .select("block_id")
+    .eq("child_id", childId)
+    .eq("date", d);
+  if (error) { console.error(error); return []; }
+  return (data || []).map((r: any) => r.block_id);
+}
+
+export async function toggleScheduleBlock(childId: string, blockId: string, shouldComplete: boolean): Promise<void> {
+  const d = todayDate();
+  if (shouldComplete) {
+    const { error } = await supabase
+      .from("schedule_completions")
+      .upsert({
+        child_id: childId,
+        date: d,
+        block_id: blockId,
+        completed_at: new Date().toISOString(),
+      }, { onConflict: "child_id,date,block_id" });
+    if (error) console.error(error);
+  } else {
+    const { error } = await supabase
+      .from("schedule_completions")
+      .delete()
+      .eq("child_id", childId)
+      .eq("date", d)
+      .eq("block_id", blockId);
+    if (error) console.error(error);
+  }
+}
+
+// For parent dashboard — get completions across multiple days
+export async function getScheduleCompletionsInRange(childId: string, startDate: string, endDate: string): Promise<Record<string, string[]>> {
+  const { data, error } = await supabase
+    .from("schedule_completions")
+    .select("date, block_id")
+    .eq("child_id", childId)
+    .gte("date", startDate)
+    .lte("date", endDate);
+  if (error) { console.error(error); return {}; }
+  const byDate: Record<string, string[]> = {};
+  (data || []).forEach((r: any) => {
+    if (!byDate[r.date]) byDate[r.date] = [];
+    byDate[r.date].push(r.block_id);
+  });
+  return byDate;
+}

@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SUBJECTS, DIFFICULTY_LEVELS, AVATARS, type Child, type DailyProgress } from "@/lib/constants";
 import { generateQuestion, ENCOURAGEMENTS, WRONG_ENCOURAGEMENTS, type Question } from "@/lib/questions";
-import { getAllChildren, createChild, getDailyProgress, upsertDailyProgress, updateChildXP, incrementTopicProgress } from "@/lib/db";
+import { getAllChildren, createChild, getDailyProgress, upsertDailyProgress, updateChildXP, incrementTopicProgress, getScheduleCompletions, toggleScheduleBlock } from "@/lib/db";
+import { getScheduleForAge, getDayThemedBlocks, WEEKLY_THEMES, type ScheduleBlock } from "@/lib/schedule";
 
 export default function KidsApp() {
   const [screen, setScreen] = useState<string>("splash");
@@ -26,6 +27,7 @@ export default function KidsApp() {
   const [newChildAvatar, setNewChildAvatar] = useState("🦁");
   const [dailyProgress, setDailyProgress] = useState<DailyProgress>({ total_questions: 0, total_correct: 0, xp: 0, subjects: {} });
   const [loading, setLoading] = useState(true);
+  const [completedBlocks, setCompletedBlocks] = useState<string[]>([]);
 
   useEffect(() => { loadData(); }, []);
 
@@ -61,7 +63,26 @@ export default function KidsApp() {
     setCurrentChild(child);
     const dp = await getDailyProgress(child.id);
     setDailyProgress(dp || { total_questions: 0, total_correct: 0, xp: 0, subjects: {} });
+    const completed = await getScheduleCompletions(child.id);
+    setCompletedBlocks(completed);
     setScreen("dashboard");
+  };
+
+  const toggleBlockCompletion = async (blockId: string) => {
+    if (!currentChild) return;
+    const isCompleted = completedBlocks.includes(blockId);
+    const newList = isCompleted
+      ? completedBlocks.filter(id => id !== blockId)
+      : [...completedBlocks, blockId];
+    setCompletedBlocks(newList);
+    await toggleScheduleBlock(currentChild.id, blockId, !isCompleted);
+  };
+
+  const launchBlockQuiz = (block: ScheduleBlock) => {
+    if (block.linkedSubject && SUBJECTS[block.linkedSubject]) {
+      setSelectedSubject(block.linkedSubject);
+      setScreen("topics");
+    }
   };
 
   const startQuiz = (subject: string, topic: string) => {
@@ -252,6 +273,23 @@ export default function KidsApp() {
             </div>
           </div>
 
+          <button onClick={() => setScreen("todaysPlan")} className="btn-hover" style={{
+            width: "100%", padding: "16px 20px", marginBottom: 20, borderRadius: 20,
+            background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+            border: "none", color: "white", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+            boxShadow: "0 4px 15px rgba(79, 70, 229, 0.4)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ fontSize: 36 }}>📅</div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: 19 }}>Today&apos;s Plan</div>
+                <div style={{ fontSize: 12, opacity: 0.9 }}>See your daily schedule and tick off tasks</div>
+              </div>
+            </div>
+            <div style={{ fontSize: 24 }}>→</div>
+          </button>
+
           <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 22, marginBottom: 16 }}>Choose a Subject 📖</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
             {Object.entries(SUBJECTS).map(([key, subj], i) => (
@@ -266,6 +304,124 @@ export default function KidsApp() {
           </div>
         </div>
       )}
+
+      {/* ============ TODAY'S PLAN SCREEN ============ */}
+      {screen === "todaysPlan" && currentChild && (() => {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const theme = WEEKLY_THEMES[dayOfWeek];
+        const baseBlocks = getScheduleForAge(currentChild.age);
+        const blocks = getDayThemedBlocks(baseBlocks, dayOfWeek);
+        const completedCount = blocks.filter(b => completedBlocks.includes(b.id)).length;
+        const pctComplete = Math.round((completedCount / blocks.length) * 100);
+        const isRestDay = dayOfWeek === 0;
+
+        return (
+          <div style={{ maxWidth: 800, margin: "0 auto", padding: "20px 16px", paddingBottom: 100 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <button onClick={() => setScreen("dashboard")} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "white", padding: "8px 16px", borderRadius: 12, cursor: "pointer", fontSize: 14 }}>← Back</button>
+              <div style={{ fontSize: 14, opacity: 0.7 }}>{now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" })}</div>
+            </div>
+
+            <div style={{ textAlign: "center", marginBottom: 24 }}>
+              <div style={{ fontSize: 56, marginBottom: 8 }}>{theme.emoji}</div>
+              <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 28, margin: "0 0 4px" }}>{theme.label}</h2>
+              <p style={{ opacity: 0.7, margin: 0, fontSize: 14 }}>Today&apos;s learning plan for {currentChild.name}</p>
+            </div>
+
+            {isRestDay ? (
+              <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, textAlign: "center", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div style={{ fontSize: 72, marginBottom: 12 }}>🛌</div>
+                <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 24, margin: "0 0 8px" }}>It&apos;s Rest Day!</h3>
+                <p style={{ opacity: 0.8, lineHeight: 1.6 }}>No learning today. Play, rest, spend time with family, and come back fresh tomorrow! 🌟</p>
+              </div>
+            ) : (
+              <>
+                {/* Progress bar */}
+                <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 20, padding: 20, marginBottom: 20, border: "1px solid rgba(255,255,255,0.1)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                    <div style={{ fontWeight: 700, fontSize: 16 }}>Day Progress</div>
+                    <div style={{ fontWeight: 900, fontSize: 18, color: pctComplete === 100 ? "#10B981" : "#FCD34D" }}>{completedCount}/{blocks.length}</div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12, height: 14, overflow: "hidden" }}>
+                    <div style={{ height: "100%", borderRadius: 12, transition: "width 0.5s ease", width: `${pctComplete}%`, background: pctComplete === 100 ? "linear-gradient(90deg, #10B981, #34D399)" : "linear-gradient(90deg, #FCD34D, #F59E0B)" }} />
+                  </div>
+                  {pctComplete === 100 && <div style={{ textAlign: "center", marginTop: 12, fontSize: 15, fontWeight: 700, color: "#10B981" }}>🎉 All done today! You&apos;re a superstar!</div>}
+                </div>
+
+                {/* Blocks list */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {blocks.map((block, i) => {
+                    const isDone = completedBlocks.includes(block.id);
+                    const canLaunch = block.type === "app_quiz" && block.linkedSubject && SUBJECTS[block.linkedSubject];
+                    return (
+                      <div
+                        key={block.id}
+                        style={{
+                          background: isDone ? "rgba(16, 185, 129, 0.15)" : "rgba(255,255,255,0.06)",
+                          borderRadius: 16,
+                          padding: 16,
+                          border: `1px solid ${isDone ? "rgba(16, 185, 129, 0.4)" : "rgba(255,255,255,0.1)"}`,
+                          animation: `fadeIn 0.3s ease ${i * 0.04}s both`,
+                          transition: "all 0.3s",
+                          opacity: isDone ? 0.8 : 1,
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                          {/* Checkbox */}
+                          <button
+                            onClick={() => toggleBlockCompletion(block.id)}
+                            style={{
+                              width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                              border: `2px solid ${isDone ? "#10B981" : "rgba(255,255,255,0.3)"}`,
+                              background: isDone ? "#10B981" : "transparent",
+                              cursor: "pointer", color: "white", fontSize: 20,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              transition: "all 0.2s",
+                            }}
+                          >
+                            {isDone ? "✓" : ""}
+                          </button>
+
+                          {/* Block info */}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                              <span style={{ fontSize: 24 }}>{block.emoji}</span>
+                              <div style={{ fontWeight: 800, fontSize: 16, textDecoration: isDone ? "line-through" : "none" }}>{block.title}</div>
+                              <span style={{ fontSize: 11, padding: "2px 8px", background: `${block.color}33`, color: block.color, borderRadius: 6, fontWeight: 700, border: `1px solid ${block.color}66` }}>{block.time}</span>
+                            </div>
+                            <div style={{ fontSize: 13, opacity: 0.75, marginTop: 6, lineHeight: 1.5 }}>{block.description}</div>
+
+                            {/* Launch button for app-linked blocks */}
+                            {canLaunch && !isDone && (
+                              <button
+                                onClick={() => launchBlockQuiz(block)}
+                                style={{
+                                  marginTop: 10,
+                                  padding: "8px 16px",
+                                  borderRadius: 10,
+                                  background: block.linkedSubject ? SUBJECTS[block.linkedSubject].gradient : "rgba(255,255,255,0.1)",
+                                  border: "none",
+                                  color: "white",
+                                  cursor: "pointer",
+                                  fontSize: 13,
+                                  fontWeight: 700,
+                                }}
+                              >
+                                🚀 Start {block.linkedSubject ? SUBJECTS[block.linkedSubject].name : "Activity"}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })()}
 
       {screen === "topics" && selectedSubject && (
         <div style={{ maxWidth: 600, margin: "0 auto", padding: "20px 16px" }}>

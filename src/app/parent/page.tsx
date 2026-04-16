@@ -4,7 +4,8 @@ import Link from "next/link";
 import { SUBJECTS, DIFFICULTY_LEVELS, type Child } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
 import { ALL_OBJECTIVES, computeObjectiveProgress, summariseSubject, type CurriculumObjective, type ObjectiveProgress } from "@/lib/curriculum";
-import { getAllTopicProgress, type TopicProgressRecord } from "@/lib/db";
+import { getAllTopicProgress, getScheduleCompletionsInRange, type TopicProgressRecord } from "@/lib/db";
+import { getScheduleForAge, WEEKLY_THEMES, type ScheduleBlock } from "@/lib/schedule";
 
 const PARENT_PIN = process.env.NEXT_PUBLIC_PARENT_PIN || "1234";
 
@@ -25,11 +26,13 @@ export default function ParentDashboard() {
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [pastDays, setPastDays] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<"daily" | "curriculum">("daily");
+  const [activeTab, setActiveTab] = useState<"daily" | "curriculum" | "schedule">("daily");
   const [topicProgressByChild, setTopicProgressByChild] = useState<Record<string, TopicProgressRecord[]>>({});
   const [curriculumChildId, setCurriculumChildId] = useState<string | null>(null);
   const [curriculumSubject, setCurriculumSubject] = useState<"maths" | "english">("maths");
   const [curriculumStageFilter, setCurriculumStageFilter] = useState<"all" | "KS1" | "KS2" | "KS3" | "GCSE">("all");
+  const [scheduleChildId, setScheduleChildId] = useState<string | null>(null);
+  const [scheduleCompletions, setScheduleCompletions] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     const days: string[] = [];
@@ -66,11 +69,32 @@ export default function ParentDashboard() {
       const kids = (data || []) as Child[];
       setChildren(kids);
       if (kids.length > 0 && !curriculumChildId) setCurriculumChildId(kids[0].id);
+      if (kids.length > 0 && !scheduleChildId) setScheduleChildId(kids[0].id);
       await loadDailyDataForChildren(kids);
       await loadTopicProgressForChildren(kids);
+      await loadScheduleForChildren(kids);
     } catch {}
     setLoading(false);
     setLastRefresh(new Date());
+  };
+
+  const loadScheduleForChildren = async (kids: Child[]) => {
+    const map: Record<string, string[]> = {};
+    const today = new Date();
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - 6);
+    const startStr = weekStart.toISOString().split("T")[0];
+    const endStr = today.toISOString().split("T")[0];
+    for (const child of kids) {
+      const byDate = await getScheduleCompletionsInRange(child.id, startStr, endStr);
+      // Store as flat array of "date::block_id" strings
+      const flat: string[] = [];
+      Object.entries(byDate).forEach(([date, blockIds]) => {
+        blockIds.forEach(bid => flat.push(`${date}::${bid}`));
+      });
+      map[child.id + ":week"] = flat;
+    }
+    setScheduleCompletions(map);
   };
 
   const loadTopicProgressForChildren = async (kids: Child[]) => {
@@ -204,6 +228,16 @@ export default function ParentDashboard() {
             marginBottom: -1,
           }}
         >🎯 Curriculum Progress</button>
+        <button
+          onClick={() => setActiveTab("schedule")}
+          style={{
+            padding: "12px 20px", border: "none", background: "transparent", cursor: "pointer",
+            fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700,
+            color: activeTab === "schedule" ? "#4f46e5" : "#64748b",
+            borderBottom: activeTab === "schedule" ? "3px solid #4f46e5" : "3px solid transparent",
+            marginBottom: -1,
+          }}
+        >📆 Schedule Completion</button>
       </div>
 
       {/* CURRICULUM TAB */}
@@ -403,6 +437,142 @@ export default function ParentDashboard() {
             <div style={{ textAlign: "center", padding: "16px 20px", fontSize: 12, color: "#94a3b8" }}>
               <p style={{ margin: 0 }}>Objective mastery = 5+ attempts at required level with ≥ 80% accuracy</p>
               <p style={{ margin: "4px 0 0" }}>Based on UK National Curriculum + GCSE (AQA & Edexcel)</p>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* SCHEDULE TAB */}
+      {activeTab === "schedule" && (() => {
+        const child = children.find(c => c.id === scheduleChildId) || children[0];
+        if (!child) return null;
+        const blocks = getScheduleForAge(child.age);
+        const todayStr = new Date().toISOString().split("T")[0];
+        const completionsToday = scheduleCompletions[child.id + ":today"] || [];
+
+        // For week view: last 7 days
+        const weekKey = child.id + ":week";
+        const weekData = scheduleCompletions[weekKey] || [];
+
+        return (
+          <div style={{ padding: "20px clamp(16px, 4vw, 32px)" }}>
+            {/* Child selector */}
+            <div style={{ marginBottom: 16 }}>
+              <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, color: "#475569", margin: "0 0 10px", fontWeight: 600 }}>👤 Select Child</h3>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {children.map(c => (
+                  <button key={c.id} onClick={() => setScheduleChildId(c.id)}
+                    style={{
+                      padding: "10px 16px", borderRadius: 12, cursor: "pointer",
+                      background: scheduleChildId === c.id ? "#4f46e5" : "white",
+                      color: scheduleChildId === c.id ? "white" : "#334155",
+                      border: scheduleChildId === c.id ? "2px solid #4f46e5" : "2px solid #e2e8f0",
+                      fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700,
+                      display: "flex", alignItems: "center", gap: 8,
+                    }}>
+                    <span style={{ fontSize: 18 }}>{c.avatar}</span>
+                    {c.name} <span style={{ opacity: 0.7, fontSize: 12 }}>(Age {c.age})</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Today's completion summary */}
+            {(() => {
+              const todayCompleted = weekData.filter(key => key.startsWith(todayStr + "::"));
+              const todayPct = blocks.length > 0 ? Math.round((todayCompleted.length / blocks.length) * 100) : 0;
+
+              return (
+                <div style={{
+                  background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                  borderRadius: 20, padding: 24, color: "white", marginBottom: 20,
+                  boxShadow: "0 8px 24px rgba(79, 70, 229, 0.25)",
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
+                    <div>
+                      <div style={{ fontSize: 13, opacity: 0.9, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{child.name}&apos;s Schedule Today</div>
+                      <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 28, fontWeight: 800, marginTop: 4 }}>
+                        {todayCompleted.length} / {blocks.length} blocks done
+                      </div>
+                      <div style={{ fontSize: 14, opacity: 0.85, marginTop: 6 }}>
+                        {todayPct}% of today&apos;s plan complete
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 8, height: 10, overflow: "hidden", marginTop: 16 }}>
+                    <div style={{ height: "100%", width: `${todayPct}%`, background: "white", borderRadius: 8, transition: "width 1s ease" }} />
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Today's blocks with status */}
+            <div style={{ background: "white", borderRadius: 16, border: "1px solid #e2e8f0", overflow: "hidden", marginBottom: 20 }}>
+              <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", background: "#fafbff" }}>
+                <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 17, fontWeight: 800, color: "#1e293b", margin: 0 }}>Today&apos;s Blocks</h4>
+                <div style={{ fontSize: 12, color: "#64748b", marginTop: 2, fontWeight: 500 }}>{new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}</div>
+              </div>
+              <div>
+                {blocks.map(block => {
+                  const isDone = weekData.includes(todayStr + "::" + block.id);
+                  return (
+                    <div key={block.id} style={{ padding: "12px 18px", borderBottom: "1px solid #f8fafc", display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                        background: isDone ? "#10B981" : "#f1f5f9",
+                        border: `2px solid ${isDone ? "#10B981" : "#e2e8f0"}`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        color: "white", fontSize: 14, fontWeight: 700,
+                      }}>{isDone ? "✓" : ""}</div>
+                      <span style={{ fontSize: 22 }}>{block.emoji}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: isDone ? "#10B981" : "#1e293b", textDecoration: isDone ? "line-through" : "none" }}>{block.title}</div>
+                        <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{block.time} · {block.durationMins} mins</div>
+                      </div>
+                      <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 8, background: isDone ? "#ecfdf5" : "#f8fafc", color: isDone ? "#10B981" : "#94a3b8", fontWeight: 700 }}>
+                        {isDone ? "Done" : "Pending"}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 7-day history */}
+            <div style={{ background: "white", borderRadius: 16, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+              <div style={{ padding: "14px 18px", borderBottom: "1px solid #f1f5f9", background: "#fafbff" }}>
+                <h4 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 17, fontWeight: 800, color: "#1e293b", margin: 0 }}>Last 7 Days</h4>
+              </div>
+              <div style={{ padding: 16 }}>
+                {pastDays.map(day => {
+                  const dayCompleted = weekData.filter(key => key.startsWith(day + "::")).length;
+                  const dayPct = blocks.length > 0 ? Math.round((dayCompleted / blocks.length) * 100) : 0;
+                  const d = new Date(day);
+                  const isToday = day === todayStr;
+                  return (
+                    <div key={day} style={{ marginBottom: 10 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>
+                          {isToday ? "Today" : d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
+                        </div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: dayPct >= 80 ? "#10B981" : dayPct >= 50 ? "#F59E0B" : dayPct > 0 ? "#EF4444" : "#94a3b8" }}>
+                          {dayCompleted} / {blocks.length} · {dayPct}%
+                        </div>
+                      </div>
+                      <div style={{ background: "#f1f5f9", borderRadius: 6, height: 8, overflow: "hidden" }}>
+                        <div style={{
+                          height: "100%", width: `${dayPct}%`, borderRadius: 6, transition: "width 0.6s ease",
+                          background: dayPct >= 80 ? "linear-gradient(90deg, #10B981, #34D399)" : dayPct >= 50 ? "linear-gradient(90deg, #F59E0B, #FBBF24)" : dayPct > 0 ? "linear-gradient(90deg, #EF4444, #F87171)" : "#e2e8f0",
+                        }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div style={{ textAlign: "center", padding: "16px 20px", fontSize: 12, color: "#94a3b8" }}>
+              <p style={{ margin: 0 }}>Blocks are ticked off by the child in their app</p>
             </div>
           </div>
         );
