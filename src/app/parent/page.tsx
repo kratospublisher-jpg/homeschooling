@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SUBJECTS, DIFFICULTY_LEVELS, type Child } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
-import { ALL_OBJECTIVES, computeObjectiveProgress, summariseSubject, type CurriculumObjective, type ObjectiveProgress } from "@/lib/curriculum";
+import { ALL_OBJECTIVES, CURRICULUM_SUBJECTS, computeObjectiveProgress, summariseSubject, type CurriculumObjective, type CurriculumSubject, type ObjectiveProgress } from "@/lib/curriculum";
 import { getAllTopicProgress, getScheduleCompletionsInRange, type TopicProgressRecord } from "@/lib/db";
 import { getScheduleForAge, WEEKLY_THEMES, type ScheduleBlock } from "@/lib/schedule";
 
@@ -29,7 +29,7 @@ export default function ParentDashboard() {
   const [activeTab, setActiveTab] = useState<"daily" | "curriculum" | "schedule">("daily");
   const [topicProgressByChild, setTopicProgressByChild] = useState<Record<string, TopicProgressRecord[]>>({});
   const [curriculumChildId, setCurriculumChildId] = useState<string | null>(null);
-  const [curriculumSubject, setCurriculumSubject] = useState<"maths" | "english">("maths");
+  const [curriculumSubject, setCurriculumSubject] = useState<"maths" | "english" | "science" | "history" | "geography" | "computing" | "languages" | "art">("maths");
   const [curriculumStageFilter, setCurriculumStageFilter] = useState<"all" | "KS1" | "KS2" | "KS3" | "GCSE">("all");
   const [scheduleChildId, setScheduleChildId] = useState<string | null>(null);
   const [scheduleCompletions, setScheduleCompletions] = useState<Record<string, string[]>>({});
@@ -301,8 +301,8 @@ export default function ParentDashboard() {
             {/* Subject selector */}
             <div style={{ marginBottom: 16 }}>
               <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 15, color: "#475569", margin: "0 0 10px", fontWeight: 600 }}>📚 Subject</h3>
-              <div style={{ display: "flex", gap: 8 }}>
-                {(["maths", "english"] as const).map(s => (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {(["maths", "english", "science", "history", "geography", "computing", "languages", "art"] as const).map(s => (
                   <button key={s} onClick={() => setCurriculumSubject(s)}
                     style={{
                       padding: "10px 20px", borderRadius: 12, cursor: "pointer",

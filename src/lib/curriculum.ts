@@ -1,199 +1,566 @@
-// UK National Curriculum + GCSE (AQA/Edexcel) objectives for Maths and English
-// Each objective represents a specific learning outcome a student should master
-// Mapped to our internal topics so progress tracking can be computed automatically
+// UK National Curriculum + GCSE (AQA/Edexcel) objectives for ALL subjects
+// Each objective = a specific learning outcome mapped to our app topics
 
 export type KeyStage = "KS1" | "KS2" | "KS3" | "GCSE";
-export type ExamBoard = "National" | "AQA" | "Edexcel" | "Both"; // Both = AQA+Edexcel shared
+export type ExamBoard = "National" | "AQA" | "Edexcel" | "Both";
+export type CurriculumSubject = "maths" | "english" | "science" | "history" | "geography" | "computing" | "languages" | "art";
 
 export interface CurriculumObjective {
   id: string;
-  subject: "maths" | "english";
+  subject: CurriculumSubject;
   keyStage: KeyStage;
-  yearGroup: number; // 1-11 (Year 1 to GCSE Year 11)
-  topic: string; // maps to our app topic
-  level: number; // app level required (1-6) to count toward mastery
+  yearGroup: number;
+  topic: string;
+  level: number;
   description: string;
   examBoard: ExamBoard;
 }
 
-// MATHS objectives — spans Year 1 through GCSE
-// Year groups: 1-2 (KS1), 3-6 (KS2), 7-9 (KS3), 10-11 (GCSE)
-// App levels: 1 = age 5 (Y1), 2 = age 6 (Y2), 3 = age 7 (Y3), 4 = age 8-9, 5 = age 9-11 (Y5-6), 6 = GCSE
-
+// ===========================
+// MATHS (10 topics × 6 levels = 60 objectives)
+// ===========================
 export const MATHS_OBJECTIVES: CurriculumObjective[] = [
-  // ============ ADDITION ============
   { id: "m-add-1", subject: "maths", keyStage: "KS1", yearGroup: 1, topic: "Addition", level: 1, description: "Add one-digit numbers to 10", examBoard: "National" },
   { id: "m-add-2", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Addition", level: 2, description: "Add numbers within 20 mentally", examBoard: "National" },
   { id: "m-add-3", subject: "maths", keyStage: "KS2", yearGroup: 3, topic: "Addition", level: 3, description: "Add 2-digit numbers with regrouping", examBoard: "National" },
   { id: "m-add-4", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Addition", level: 4, description: "Add 3-digit numbers using column method", examBoard: "National" },
-  { id: "m-add-5", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Addition", level: 5, description: "Add 4-digit numbers and understand place value", examBoard: "National" },
+  { id: "m-add-5", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Addition", level: 5, description: "Add 4+ digit numbers and understand place value", examBoard: "National" },
   { id: "m-add-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Addition", level: 6, description: "Solve multi-step addition problems in context", examBoard: "Both" },
-
-  // ============ SUBTRACTION ============
   { id: "m-sub-1", subject: "maths", keyStage: "KS1", yearGroup: 1, topic: "Subtraction", level: 1, description: "Subtract one-digit numbers within 10", examBoard: "National" },
   { id: "m-sub-2", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Subtraction", level: 2, description: "Subtract within 20 mentally", examBoard: "National" },
   { id: "m-sub-3", subject: "maths", keyStage: "KS2", yearGroup: 3, topic: "Subtraction", level: 3, description: "Subtract 2-digit numbers with borrowing", examBoard: "National" },
   { id: "m-sub-4", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Subtraction", level: 4, description: "Subtract 3-digit numbers using column method", examBoard: "National" },
   { id: "m-sub-5", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Subtraction", level: 5, description: "Subtract 4+ digit numbers including negatives", examBoard: "National" },
   { id: "m-sub-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Subtraction", level: 6, description: "Apply subtraction to real-world multi-step problems", examBoard: "Both" },
-
-  // ============ MULTIPLICATION ============
   { id: "m-mul-1", subject: "maths", keyStage: "KS1", yearGroup: 1, topic: "Multiplication", level: 1, description: "Count in 2s, 5s, 10s; understand groups", examBoard: "National" },
   { id: "m-mul-2", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Multiplication", level: 2, description: "Recall 2, 5, 10 times tables", examBoard: "National" },
-  { id: "m-mul-3", subject: "maths", keyStage: "KS2", yearGroup: 3, topic: "Multiplication", level: 3, description: "Learn 3, 4, 6, 7, 8, 9 times tables", examBoard: "National" },
-  { id: "m-mul-4", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Multiplication", level: 4, description: "All times tables up to 12×12", examBoard: "National" },
-  { id: "m-mul-5", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Multiplication", level: 5, description: "Multiply 2-digit × 2-digit numbers (long mult.)", examBoard: "National" },
+  { id: "m-mul-3", subject: "maths", keyStage: "KS2", yearGroup: 3, topic: "Multiplication", level: 3, description: "Learn all times tables to 12×12", examBoard: "National" },
+  { id: "m-mul-4", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Multiplication", level: 4, description: "Multiply 2-digit by 1-digit numbers", examBoard: "National" },
+  { id: "m-mul-5", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Multiplication", level: 5, description: "Long multiplication of multi-digit numbers", examBoard: "National" },
   { id: "m-mul-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Multiplication", level: 6, description: "Powers, indices, and multi-step multiplication", examBoard: "Both" },
-
-  // ============ DIVISION ============
   { id: "m-div-1", subject: "maths", keyStage: "KS1", yearGroup: 1, topic: "Division", level: 1, description: "Understand sharing and halving", examBoard: "National" },
   { id: "m-div-2", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Division", level: 2, description: "Divide by 2, 5, 10", examBoard: "National" },
   { id: "m-div-3", subject: "maths", keyStage: "KS2", yearGroup: 3, topic: "Division", level: 3, description: "Short division with times tables", examBoard: "National" },
   { id: "m-div-4", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Division", level: 4, description: "Short division with remainders", examBoard: "National" },
   { id: "m-div-5", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Division", level: 5, description: "Long division of 3+ digit numbers", examBoard: "National" },
   { id: "m-div-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Division", level: 6, description: "Division in ratio and proportion problems", examBoard: "Both" },
-
-  // ============ FRACTIONS ============
   { id: "m-fra-1", subject: "maths", keyStage: "KS1", yearGroup: 1, topic: "Fractions", level: 1, description: "Recognise halves and quarters", examBoard: "National" },
   { id: "m-fra-2", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Fractions", level: 2, description: "Find simple unit fractions of quantities", examBoard: "National" },
   { id: "m-fra-3", subject: "maths", keyStage: "KS2", yearGroup: 3, topic: "Fractions", level: 3, description: "Add/subtract fractions with same denominator", examBoard: "National" },
   { id: "m-fra-4", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Fractions", level: 4, description: "Simplify and convert between mixed/improper", examBoard: "National" },
   { id: "m-fra-5", subject: "maths", keyStage: "KS2", yearGroup: 6, topic: "Fractions", level: 5, description: "Multiply and divide fractions", examBoard: "National" },
   { id: "m-fra-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Fractions", level: 6, description: "Solve equations involving fractions", examBoard: "Both" },
-
-  // ============ DECIMALS ============
-  { id: "m-dec-1", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Decimals", level: 1, description: "Understand halves and wholes as decimals (money)", examBoard: "National" },
+  { id: "m-dec-1", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Decimals", level: 1, description: "Understand halves/wholes as decimals (money)", examBoard: "National" },
   { id: "m-dec-2", subject: "maths", keyStage: "KS2", yearGroup: 3, topic: "Decimals", level: 2, description: "Add and subtract simple decimals", examBoard: "National" },
   { id: "m-dec-3", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Decimals", level: 3, description: "Multiply/divide decimals by whole numbers", examBoard: "National" },
   { id: "m-dec-4", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Decimals", level: 4, description: "Round decimals to 1 and 2 decimal places", examBoard: "National" },
   { id: "m-dec-5", subject: "maths", keyStage: "KS2", yearGroup: 6, topic: "Decimals", level: 5, description: "Convert between fractions, decimals, percentages", examBoard: "National" },
   { id: "m-dec-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Decimals", level: 6, description: "Recurring decimals and standard form", examBoard: "Both" },
-
-  // ============ ALGEBRA ============
   { id: "m-alg-1", subject: "maths", keyStage: "KS1", yearGroup: 1, topic: "Algebra Basics", level: 1, description: "Complete number patterns", examBoard: "National" },
   { id: "m-alg-2", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Algebra Basics", level: 2, description: "Find missing numbers in simple equations", examBoard: "National" },
   { id: "m-alg-3", subject: "maths", keyStage: "KS2", yearGroup: 6, topic: "Algebra Basics", level: 3, description: "Solve one-step linear equations", examBoard: "National" },
   { id: "m-alg-4", subject: "maths", keyStage: "KS3", yearGroup: 7, topic: "Algebra Basics", level: 4, description: "Solve two-step equations and use variables", examBoard: "National" },
   { id: "m-alg-5", subject: "maths", keyStage: "KS3", yearGroup: 9, topic: "Algebra Basics", level: 5, description: "Expand brackets and substitute values", examBoard: "National" },
-  { id: "m-alg-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Algebra Basics", level: 6, description: "Factorise, solve quadratics, and simultaneous equations", examBoard: "Both" },
-
-  // ============ GEOMETRY ============
+  { id: "m-alg-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Algebra Basics", level: 6, description: "Factorise, quadratics, simultaneous equations", examBoard: "Both" },
   { id: "m-geo-1", subject: "maths", keyStage: "KS1", yearGroup: 1, topic: "Geometry", level: 1, description: "Identify 2D shapes (circle, square, triangle)", examBoard: "National" },
   { id: "m-geo-2", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Geometry", level: 2, description: "Identify 3D shapes and their properties", examBoard: "National" },
   { id: "m-geo-3", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Geometry", level: 3, description: "Calculate area and perimeter of rectangles", examBoard: "National" },
   { id: "m-geo-4", subject: "maths", keyStage: "KS2", yearGroup: 6, topic: "Geometry", level: 4, description: "Measure and calculate angles in triangles", examBoard: "National" },
-  { id: "m-geo-5", subject: "maths", keyStage: "KS3", yearGroup: 8, topic: "Geometry", level: 5, description: "Area/circumference of circles; volumes of cuboids", examBoard: "National" },
+  { id: "m-geo-5", subject: "maths", keyStage: "KS3", yearGroup: 8, topic: "Geometry", level: 5, description: "Area/circumference of circles; volumes", examBoard: "National" },
   { id: "m-geo-6", subject: "maths", keyStage: "GCSE", yearGroup: 11, topic: "Geometry", level: 6, description: "Pythagoras, trigonometry (SOH-CAH-TOA)", examBoard: "Both" },
-
-  // ============ PERCENTAGES ============
   { id: "m-per-1", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Percentages", level: 1, description: "Understand 50% and 100% as half and whole", examBoard: "National" },
   { id: "m-per-2", subject: "maths", keyStage: "KS2", yearGroup: 4, topic: "Percentages", level: 2, description: "Find 50%, 25%, 10% of amounts", examBoard: "National" },
   { id: "m-per-3", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Percentages", level: 3, description: "Calculate simple percentage of a quantity", examBoard: "National" },
   { id: "m-per-4", subject: "maths", keyStage: "KS2", yearGroup: 6, topic: "Percentages", level: 4, description: "Find any % of an amount; percentage increase", examBoard: "National" },
   { id: "m-per-5", subject: "maths", keyStage: "KS3", yearGroup: 8, topic: "Percentages", level: 5, description: "Percentage change and reverse percentages", examBoard: "National" },
   { id: "m-per-6", subject: "maths", keyStage: "GCSE", yearGroup: 10, topic: "Percentages", level: 6, description: "Compound interest and depreciation", examBoard: "Both" },
-
-  // ============ RATIOS ============
   { id: "m-rat-1", subject: "maths", keyStage: "KS1", yearGroup: 2, topic: "Ratios", level: 1, description: "Compare quantities (more/less/same)", examBoard: "National" },
   { id: "m-rat-2", subject: "maths", keyStage: "KS2", yearGroup: 5, topic: "Ratios", level: 2, description: "Simplify simple ratios", examBoard: "National" },
   { id: "m-rat-3", subject: "maths", keyStage: "KS2", yearGroup: 6, topic: "Ratios", level: 3, description: "Share amounts in given ratio", examBoard: "National" },
-  { id: "m-rat-4", subject: "maths", keyStage: "KS3", yearGroup: 7, topic: "Ratios", level: 4, description: "Share using part:part and part:whole ratios", examBoard: "National" },
+  { id: "m-rat-4", subject: "maths", keyStage: "KS3", yearGroup: 7, topic: "Ratios", level: 4, description: "Part:part and part:whole ratios", examBoard: "National" },
   { id: "m-rat-5", subject: "maths", keyStage: "KS3", yearGroup: 9, topic: "Ratios", level: 5, description: "Scale factors, map scales, direct proportion", examBoard: "National" },
   { id: "m-rat-6", subject: "maths", keyStage: "GCSE", yearGroup: 11, topic: "Ratios", level: 6, description: "Three-part ratios and inverse proportion", examBoard: "Both" },
 ];
 
-// ENGLISH objectives — spans Year 1 through GCSE
+// ===========================
+// ENGLISH (10 topics × 6 levels = 60 objectives)
+// ===========================
 export const ENGLISH_OBJECTIVES: CurriculumObjective[] = [
-  // ============ READING ============
   { id: "e-rea-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Reading", level: 1, description: "Understand basic book parts (title, cover)", examBoard: "National" },
   { id: "e-rea-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Reading", level: 2, description: "Distinguish fiction/non-fiction; identify author", examBoard: "National" },
   { id: "e-rea-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Reading", level: 3, description: "Identify protagonist, plot, and story structure", examBoard: "National" },
   { id: "e-rea-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Reading", level: 4, description: "Analyse setting, theme, and point of view", examBoard: "National" },
   { id: "e-rea-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Reading", level: 5, description: "Recognise symbolism, foreshadowing, genre", examBoard: "National" },
-  { id: "e-rea-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Reading", level: 6, description: "Analyse tone, motif, and dramatic irony in texts", examBoard: "Both" },
-
-  // ============ SPELLING ============
-  { id: "e-spe-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Spelling", level: 1, description: "Spell common 3-letter words (CVC)", examBoard: "National" },
-  { id: "e-spe-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Spelling", level: 2, description: "Spell Year 2 common exception words", examBoard: "National" },
-  { id: "e-spe-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Spelling", level: 3, description: "Spell Year 3/4 spelling list words", examBoard: "National" },
-  { id: "e-spe-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Spelling", level: 4, description: "Spell Year 5/6 spelling list words", examBoard: "National" },
-  { id: "e-spe-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Spelling", level: 5, description: "Spell complex academic vocabulary", examBoard: "National" },
+  { id: "e-rea-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Reading", level: 6, description: "Analyse tone, motif, and dramatic irony", examBoard: "Both" },
+  { id: "e-spe-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Spelling", level: 1, description: "Spell common 3-letter CVC words", examBoard: "National" },
+  { id: "e-spe-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Spelling", level: 2, description: "Year 2 common exception words", examBoard: "National" },
+  { id: "e-spe-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Spelling", level: 3, description: "Year 3/4 spelling list words", examBoard: "National" },
+  { id: "e-spe-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Spelling", level: 4, description: "Year 5/6 spelling list words", examBoard: "National" },
+  { id: "e-spe-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Spelling", level: 5, description: "Complex academic vocabulary", examBoard: "National" },
   { id: "e-spe-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Spelling", level: 6, description: "Accurate spelling in extended writing", examBoard: "Both" },
-
-  // ============ GRAMMAR ============
-  { id: "e-gra-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Grammar", level: 1, description: "Identify nouns, verbs, adjectives simply", examBoard: "National" },
-  { id: "e-gra-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Grammar", level: 2, description: "Use proper nouns; form simple plurals", examBoard: "National" },
-  { id: "e-gra-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Grammar", level: 3, description: "Identify articles, adjectives; irregular plurals", examBoard: "National" },
+  { id: "e-gra-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Grammar", level: 1, description: "Identify nouns, verbs, adjectives", examBoard: "National" },
+  { id: "e-gra-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Grammar", level: 2, description: "Proper nouns; form simple plurals", examBoard: "National" },
+  { id: "e-gra-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Grammar", level: 3, description: "Articles, adjectives; irregular plurals", examBoard: "National" },
   { id: "e-gra-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Grammar", level: 4, description: "Adverbs, pronouns, prepositions; past tenses", examBoard: "National" },
-  { id: "e-gra-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Grammar", level: 5, description: "Homophones (their/there/they're); conjunctions", examBoard: "National" },
-  { id: "e-gra-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Grammar", level: 6, description: "Active/passive voice; subordinate clauses; subjunctive", examBoard: "Both" },
-
-  // ============ PUNCTUATION ============
+  { id: "e-gra-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Grammar", level: 5, description: "Homophones; conjunctions; perfect tenses", examBoard: "National" },
+  { id: "e-gra-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Grammar", level: 6, description: "Active/passive voice; subordinate clauses", examBoard: "Both" },
   { id: "e-pun-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Punctuation", level: 1, description: "Use capital letters and full stops", examBoard: "National" },
-  { id: "e-pun-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Punctuation", level: 2, description: "Use question marks, exclamation marks, commas in lists", examBoard: "National" },
-  { id: "e-pun-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Punctuation", level: 3, description: "Use apostrophes for possession and speech marks", examBoard: "National" },
-  { id: "e-pun-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Punctuation", level: 4, description: "Commas in compound sentences; ellipsis; dashes", examBoard: "National" },
+  { id: "e-pun-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Punctuation", level: 2, description: "Question marks, exclamation marks, commas", examBoard: "National" },
+  { id: "e-pun-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Punctuation", level: 3, description: "Apostrophes for possession; speech marks", examBoard: "National" },
+  { id: "e-pun-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Punctuation", level: 4, description: "Commas in compound sentences; dashes", examBoard: "National" },
   { id: "e-pun-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Punctuation", level: 5, description: "Semicolons, colons, hyphens", examBoard: "National" },
   { id: "e-pun-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Punctuation", level: 6, description: "Accurate punctuation in extended writing", examBoard: "Both" },
-
-  // ============ VOCABULARY ============
   { id: "e-voc-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Vocabulary", level: 1, description: "Basic adjectives and opposites", examBoard: "National" },
   { id: "e-voc-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Vocabulary", level: 2, description: "Synonyms for common words", examBoard: "National" },
   { id: "e-voc-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Vocabulary", level: 3, description: "Synonyms and antonyms", examBoard: "National" },
-  { id: "e-voc-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Vocabulary", level: 4, description: "Ambitious vocabulary (reluctant, generous, etc.)", examBoard: "National" },
+  { id: "e-voc-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Vocabulary", level: 4, description: "Ambitious vocabulary (reluctant, generous)", examBoard: "National" },
   { id: "e-voc-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Vocabulary", level: 5, description: "Sophisticated vocabulary (meticulous, dubious)", examBoard: "National" },
-  { id: "e-voc-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Vocabulary", level: 6, description: "Advanced vocabulary (ubiquitous, ephemeral, pragmatic)", examBoard: "Both" },
-
-  // ============ CREATIVE WRITING ============
-  { id: "e-cre-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Creative Writing", level: 1, description: "Understand story structure (beginning/middle/end)", examBoard: "National" },
-  { id: "e-cre-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Creative Writing", level: 2, description: "Use adjectives; create simple characters/settings", examBoard: "National" },
-  { id: "e-cre-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Creative Writing", level: 3, description: "Use similes; understand first-person narration", examBoard: "National" },
-  { id: "e-cre-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Creative Writing", level: 4, description: "Use metaphors, dialogue, flashbacks", examBoard: "National" },
-  { id: "e-cre-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Creative Writing", level: 5, description: "Alliteration, personification, hyperbole; show don't tell", examBoard: "National" },
-  { id: "e-cre-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Creative Writing", level: 6, description: "Onomatopoeia, pathetic fallacy, juxtaposition, hooks", examBoard: "Both" },
-
-  // ============ COMPREHENSION ============
+  { id: "e-voc-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Vocabulary", level: 6, description: "Advanced vocabulary (ubiquitous, ephemeral)", examBoard: "Both" },
+  { id: "e-cre-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Creative Writing", level: 1, description: "Understand beginning/middle/end structure", examBoard: "National" },
+  { id: "e-cre-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Creative Writing", level: 2, description: "Use adjectives; create characters/settings", examBoard: "National" },
+  { id: "e-cre-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Creative Writing", level: 3, description: "Use similes; first-person narration", examBoard: "National" },
+  { id: "e-cre-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Creative Writing", level: 4, description: "Metaphors, dialogue, flashbacks", examBoard: "National" },
+  { id: "e-cre-5", subject: "english", keyStage: "KS3", yearGroup: 8, topic: "Creative Writing", level: 5, description: "Alliteration, personification, show don't tell", examBoard: "National" },
+  { id: "e-cre-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Creative Writing", level: 6, description: "Pathetic fallacy, juxtaposition, narrative hooks", examBoard: "Both" },
   { id: "e-com-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Comprehension", level: 1, description: "Basic literal understanding of text", examBoard: "National" },
-  { id: "e-com-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Comprehension", level: 2, description: "Identify main idea; distinguish fact/opinion", examBoard: "National" },
-  { id: "e-com-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Comprehension", level: 3, description: "Summarise text; understand opinions vs facts", examBoard: "National" },
-  { id: "e-com-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Comprehension", level: 4, description: "Skim and scan; identify topic sentences; paraphrase", examBoard: "National" },
-  { id: "e-com-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Comprehension", level: 5, description: "Use PEE (Point/Evidence/Explain); identify bias", examBoard: "National" },
-  { id: "e-com-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Comprehension", level: 6, description: "Analyse tone, connotation, rhetorical devices; synthesis", examBoard: "Both" },
-
-  // ============ POETRY ============
-  { id: "e-poe-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Poetry", level: 1, description: "Recognise rhyming words; simple rhymes", examBoard: "National" },
+  { id: "e-com-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Comprehension", level: 2, description: "Identify main idea; fact vs opinion", examBoard: "National" },
+  { id: "e-com-3", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Comprehension", level: 3, description: "Summarise text; opinions vs facts", examBoard: "National" },
+  { id: "e-com-4", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Comprehension", level: 4, description: "Skim and scan; paraphrase", examBoard: "National" },
+  { id: "e-com-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Comprehension", level: 5, description: "PEE (Point/Evidence/Explain); identify bias", examBoard: "National" },
+  { id: "e-com-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Comprehension", level: 6, description: "Analyse connotation, rhetorical devices, synthesis", examBoard: "Both" },
+  { id: "e-poe-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Poetry", level: 1, description: "Recognise rhyming words", examBoard: "National" },
   { id: "e-poe-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Poetry", level: 2, description: "Understand rhythm and verse", examBoard: "National" },
-  { id: "e-poe-3", subject: "english", keyStage: "KS2", yearGroup: 4, topic: "Poetry", level: 3, description: "Stanzas, limericks, and imagery in poetry", examBoard: "National" },
-  { id: "e-poe-4", subject: "english", keyStage: "KS2", yearGroup: 6, topic: "Poetry", level: 4, description: "Haiku (5-7-5); free verse; repetition", examBoard: "National" },
-  { id: "e-poe-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Poetry", level: 5, description: "Enjambment, rhyme schemes, couplets, meter", examBoard: "National" },
-  { id: "e-poe-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Poetry", level: 6, description: "Sonnets, iambic pentameter, volta, odes", examBoard: "Both" },
-
-  // ============ SHAKESPEARE ============
-  { id: "e-sha-1", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Shakespeare Intro", level: 1, description: "Know who Shakespeare was (basic)", examBoard: "National" },
-  { id: "e-sha-2", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Shakespeare Intro", level: 2, description: "Recognise plays are performed in theatres; The Globe", examBoard: "National" },
-  { id: "e-sha-3", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Shakespeare Intro", level: 3, description: "Basic biographical info; famous quotations", examBoard: "National" },
-  { id: "e-sha-4", subject: "english", keyStage: "KS3", yearGroup: 7, topic: "Shakespeare Intro", level: 4, description: "Play types (tragedy/comedy/history); key plots", examBoard: "National" },
-  { id: "e-sha-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Shakespeare Intro", level: 5, description: "Analyse main plays (Hamlet, Macbeth, R&J)", examBoard: "National" },
-  { id: "e-sha-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Shakespeare Intro", level: 6, description: "Iambic pentameter, soliloquies, themes in plays", examBoard: "Both" },
-
-  // ============ ESSAY SKILLS ============
-  { id: "e-ess-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Essay Skills", level: 1, description: "Understand beginning/middle/end structure", examBoard: "National" },
-  { id: "e-ess-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Essay Skills", level: 2, description: "Write in clear paragraphs with connectives", examBoard: "National" },
+  { id: "e-poe-3", subject: "english", keyStage: "KS2", yearGroup: 4, topic: "Poetry", level: 3, description: "Stanzas, limericks, and imagery", examBoard: "National" },
+  { id: "e-poe-4", subject: "english", keyStage: "KS2", yearGroup: 6, topic: "Poetry", level: 4, description: "Haiku; free verse; repetition", examBoard: "National" },
+  { id: "e-poe-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Poetry", level: 5, description: "Enjambment, rhyme schemes, meter", examBoard: "National" },
+  { id: "e-poe-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Poetry", level: 6, description: "Sonnets, iambic pentameter, volta", examBoard: "Both" },
+  { id: "e-sha-1", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Shakespeare Intro", level: 1, description: "Know who Shakespeare was", examBoard: "National" },
+  { id: "e-sha-2", subject: "english", keyStage: "KS2", yearGroup: 3, topic: "Shakespeare Intro", level: 2, description: "Recognise plays and The Globe", examBoard: "National" },
+  { id: "e-sha-3", subject: "english", keyStage: "KS2", yearGroup: 5, topic: "Shakespeare Intro", level: 3, description: "Biography; famous quotations", examBoard: "National" },
+  { id: "e-sha-4", subject: "english", keyStage: "KS3", yearGroup: 7, topic: "Shakespeare Intro", level: 4, description: "Play types; key plots", examBoard: "National" },
+  { id: "e-sha-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Shakespeare Intro", level: 5, description: "Analyse Hamlet, Macbeth, R&J", examBoard: "National" },
+  { id: "e-sha-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Shakespeare Intro", level: 6, description: "Iambic pentameter, soliloquies, themes", examBoard: "Both" },
+  { id: "e-ess-1", subject: "english", keyStage: "KS1", yearGroup: 1, topic: "Essay Skills", level: 1, description: "Beginning/middle/end structure", examBoard: "National" },
+  { id: "e-ess-2", subject: "english", keyStage: "KS1", yearGroup: 2, topic: "Essay Skills", level: 2, description: "Paragraphs with connectives", examBoard: "National" },
   { id: "e-ess-3", subject: "english", keyStage: "KS2", yearGroup: 4, topic: "Essay Skills", level: 3, description: "Plan, draft, edit writing", examBoard: "National" },
-  { id: "e-ess-4", subject: "english", keyStage: "KS2", yearGroup: 6, topic: "Essay Skills", level: 4, description: "Thesis statements; topic sentences; evidence", examBoard: "National" },
-  { id: "e-ess-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Essay Skills", level: 5, description: "Counter-arguments; transitional phrases; engage reader", examBoard: "National" },
-  { id: "e-ess-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Essay Skills", level: 6, description: "Formal register; structured analysis; hedging language", examBoard: "Both" },
+  { id: "e-ess-4", subject: "english", keyStage: "KS2", yearGroup: 6, topic: "Essay Skills", level: 4, description: "Thesis statements; evidence", examBoard: "National" },
+  { id: "e-ess-5", subject: "english", keyStage: "KS3", yearGroup: 9, topic: "Essay Skills", level: 5, description: "Counter-arguments; transitions", examBoard: "National" },
+  { id: "e-ess-6", subject: "english", keyStage: "GCSE", yearGroup: 10, topic: "Essay Skills", level: 6, description: "Formal register; structured analysis", examBoard: "Both" },
 ];
 
+// ===========================
+// SCIENCE (10 topics × 6 levels = 60 objectives)
+// ===========================
+export const SCIENCE_OBJECTIVES: CurriculumObjective[] = [
+  { id: "s-liv-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Living Things", level: 1, description: "Know plants need water, light, air", examBoard: "National" },
+  { id: "s-liv-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Living Things", level: 2, description: "Understand habitats", examBoard: "National" },
+  { id: "s-liv-3", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Living Things", level: 3, description: "Five kingdoms of life", examBoard: "National" },
+  { id: "s-liv-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Living Things", level: 4, description: "Photosynthesis basics", examBoard: "National" },
+  { id: "s-liv-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Living Things", level: 5, description: "Natural selection and evolution", examBoard: "National" },
+  { id: "s-liv-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Living Things", level: 6, description: "DNA, genetics, inheritance", examBoard: "Both" },
+  { id: "s-mat-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Materials", level: 1, description: "Natural vs man-made materials", examBoard: "National" },
+  { id: "s-mat-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Materials", level: 2, description: "Freezing and expanding water", examBoard: "National" },
+  { id: "s-mat-3", subject: "science", keyStage: "KS2", yearGroup: 3, topic: "Materials", level: 3, description: "Three states of matter", examBoard: "National" },
+  { id: "s-mat-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Materials", level: 4, description: "Alloys and mixtures", examBoard: "National" },
+  { id: "s-mat-5", subject: "science", keyStage: "KS3", yearGroup: 8, topic: "Materials", level: 5, description: "Polymers and material properties", examBoard: "National" },
+  { id: "s-mat-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Materials", level: 6, description: "Nanoparticles and smart materials", examBoard: "Both" },
+  { id: "s-for-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Forces", level: 1, description: "Gravity pulls things down", examBoard: "National" },
+  { id: "s-for-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Forces", level: 2, description: "Friction slows things down", examBoard: "National" },
+  { id: "s-for-3", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Forces", level: 3, description: "Force measured in Newtons", examBoard: "National" },
+  { id: "s-for-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Forces", level: 4, description: "Newton's first law of motion", examBoard: "National" },
+  { id: "s-for-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Forces", level: 5, description: "Terminal velocity", examBoard: "National" },
+  { id: "s-for-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Forces", level: 6, description: "Pressure = Force ÷ Area", examBoard: "Both" },
+  { id: "s-ls-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Light & Sound", level: 1, description: "Rainbow colours make white light", examBoard: "National" },
+  { id: "s-ls-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Light & Sound", level: 2, description: "Sound travels fastest through solids", examBoard: "National" },
+  { id: "s-ls-3", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Light & Sound", level: 3, description: "Reflection of light", examBoard: "National" },
+  { id: "s-ls-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Light & Sound", level: 4, description: "Refraction of light", examBoard: "National" },
+  { id: "s-ls-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Light & Sound", level: 5, description: "Speed of light (300,000 km/s)", examBoard: "National" },
+  { id: "s-ls-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Light & Sound", level: 6, description: "Wave frequency and electromagnetic spectrum", examBoard: "Both" },
+  { id: "s-ele-1", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Electricity", level: 1, description: "A circuit is a loop for electricity", examBoard: "National" },
+  { id: "s-ele-2", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Electricity", level: 2, description: "Switches break/complete circuits", examBoard: "National" },
+  { id: "s-ele-3", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Electricity", level: 3, description: "Current measured in Amps", examBoard: "National" },
+  { id: "s-ele-4", subject: "science", keyStage: "KS3", yearGroup: 7, topic: "Electricity", level: 4, description: "Ohm's law (V=IR)", examBoard: "National" },
+  { id: "s-ele-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Electricity", level: 5, description: "Series vs parallel circuits", examBoard: "National" },
+  { id: "s-ele-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Electricity", level: 6, description: "Resistance, power calculations", examBoard: "Both" },
+  { id: "s-es-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Earth & Space", level: 1, description: "8 planets in solar system", examBoard: "National" },
+  { id: "s-es-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Earth & Space", level: 2, description: "Earth spinning causes day/night", examBoard: "National" },
+  { id: "s-es-3", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Earth & Space", level: 3, description: "Tilted axis causes seasons", examBoard: "National" },
+  { id: "s-es-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Earth & Space", level: 4, description: "Light year as distance measure", examBoard: "National" },
+  { id: "s-es-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Earth & Space", level: 5, description: "Big Bang theory", examBoard: "National" },
+  { id: "s-es-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Earth & Space", level: 6, description: "Tectonic plates and rock cycle", examBoard: "Both" },
+  { id: "s-hb-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Human Body", level: 1, description: "206 bones in human body", examBoard: "National" },
+  { id: "s-hb-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Human Body", level: 2, description: "Heart pumps blood", examBoard: "National" },
+  { id: "s-hb-3", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Human Body", level: 3, description: "Immune system fights disease", examBoard: "National" },
+  { id: "s-hb-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Human Body", level: 4, description: "Digestion in stomach and intestines", examBoard: "National" },
+  { id: "s-hb-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Human Body", level: 5, description: "Red blood cells carry oxygen", examBoard: "National" },
+  { id: "s-hb-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Human Body", level: 6, description: "Homeostasis and feedback loops", examBoard: "Both" },
+  { id: "s-pla-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Plants", level: 1, description: "Leaves make food for plants", examBoard: "National" },
+  { id: "s-pla-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Plants", level: 2, description: "Roots absorb water", examBoard: "National" },
+  { id: "s-pla-3", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Plants", level: 3, description: "Pollination and seed dispersal", examBoard: "National" },
+  { id: "s-pla-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Plants", level: 4, description: "Plants absorb CO₂", examBoard: "National" },
+  { id: "s-pla-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Plants", level: 5, description: "Transpiration and water loss", examBoard: "National" },
+  { id: "s-pla-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Plants", level: 6, description: "Xylem and phloem transport", examBoard: "Both" },
+  { id: "s-cr-1", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Chemical Reactions", level: 1, description: "Rusting is a change", examBoard: "National" },
+  { id: "s-cr-2", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Chemical Reactions", level: 2, description: "Baking is a chemical change", examBoard: "National" },
+  { id: "s-cr-3", subject: "science", keyStage: "KS2", yearGroup: 5, topic: "Chemical Reactions", level: 3, description: "pH scale: acids and alkalis", examBoard: "National" },
+  { id: "s-cr-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Chemical Reactions", level: 4, description: "Acids have pH below 7", examBoard: "National" },
+  { id: "s-cr-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Chemical Reactions", level: 5, description: "Exothermic and endothermic reactions", examBoard: "National" },
+  { id: "s-cr-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Chemical Reactions", level: 6, description: "Conservation of mass; balancing equations", examBoard: "Both" },
+  { id: "s-en-1", subject: "science", keyStage: "KS1", yearGroup: 1, topic: "Energy", level: 1, description: "Food gives us chemical energy", examBoard: "National" },
+  { id: "s-en-2", subject: "science", keyStage: "KS1", yearGroup: 2, topic: "Energy", level: 2, description: "Renewable energy won't run out", examBoard: "National" },
+  { id: "s-en-3", subject: "science", keyStage: "KS2", yearGroup: 4, topic: "Energy", level: 3, description: "Energy measured in Joules", examBoard: "National" },
+  { id: "s-en-4", subject: "science", keyStage: "KS2", yearGroup: 6, topic: "Energy", level: 4, description: "Kinetic energy = energy of movement", examBoard: "National" },
+  { id: "s-en-5", subject: "science", keyStage: "KS3", yearGroup: 9, topic: "Energy", level: 5, description: "Energy cannot be created or destroyed", examBoard: "National" },
+  { id: "s-en-6", subject: "science", keyStage: "GCSE", yearGroup: 10, topic: "Energy", level: 6, description: "Power = Energy ÷ Time; efficiency", examBoard: "Both" },
+];
+
+// ===========================
+// HISTORY (10 topics × 6 levels)
+// ===========================
+export const HISTORY_OBJECTIVES: CurriculumObjective[] = [
+  { id: "h-eg-1", subject: "history", keyStage: "KS1", yearGroup: 1, topic: "Ancient Egypt", level: 1, description: "Know Egypt is near the River Nile", examBoard: "National" },
+  { id: "h-eg-2", subject: "history", keyStage: "KS1", yearGroup: 2, topic: "Ancient Egypt", level: 2, description: "Pyramids are tombs for pharaohs", examBoard: "National" },
+  { id: "h-eg-3", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Ancient Egypt", level: 3, description: "Pharaohs ruled Egypt", examBoard: "National" },
+  { id: "h-eg-4", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Ancient Egypt", level: 4, description: "Hieroglyphics writing system", examBoard: "National" },
+  { id: "h-eg-5", subject: "history", keyStage: "KS3", yearGroup: 8, topic: "Ancient Egypt", level: 5, description: "Tutankhamun and archaeology", examBoard: "National" },
+  { id: "h-eg-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Ancient Egypt", level: 6, description: "Mummification and afterlife beliefs", examBoard: "Both" },
+  { id: "h-ro-1", subject: "history", keyStage: "KS1", yearGroup: 2, topic: "Romans", level: 1, description: "Romans built aqueducts", examBoard: "National" },
+  { id: "h-ro-2", subject: "history", keyStage: "KS2", yearGroup: 3, topic: "Romans", level: 2, description: "Romans invaded Britain in 43 AD", examBoard: "National" },
+  { id: "h-ro-3", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Romans", level: 3, description: "Gladiators fought in arenas", examBoard: "National" },
+  { id: "h-ro-4", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Romans", level: 4, description: "Romulus and Remus legend", examBoard: "National" },
+  { id: "h-ro-5", subject: "history", keyStage: "KS3", yearGroup: 8, topic: "Romans", level: 5, description: "The Roman Senate governed", examBoard: "National" },
+  { id: "h-ro-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Romans", level: 6, description: "Multiple factors in fall of Rome", examBoard: "Both" },
+  { id: "h-vi-1", subject: "history", keyStage: "KS1", yearGroup: 2, topic: "Vikings", level: 1, description: "Vikings came from Scandinavia", examBoard: "National" },
+  { id: "h-vi-2", subject: "history", keyStage: "KS2", yearGroup: 3, topic: "Vikings", level: 2, description: "Longships for travel and raids", examBoard: "National" },
+  { id: "h-vi-3", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Vikings", level: 3, description: "Explorers and raiders", examBoard: "National" },
+  { id: "h-vi-4", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Vikings", level: 4, description: "Danelaw in England", examBoard: "National" },
+  { id: "h-vi-5", subject: "history", keyStage: "KS3", yearGroup: 8, topic: "Vikings", level: 5, description: "Leif Erikson explored America", examBoard: "National" },
+  { id: "h-vi-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Vikings", level: 6, description: "Norse mythology and culture", examBoard: "Both" },
+  { id: "h-tu-1", subject: "history", keyStage: "KS2", yearGroup: 3, topic: "Tudors", level: 1, description: "Henry VII was first Tudor king", examBoard: "National" },
+  { id: "h-tu-2", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Tudors", level: 2, description: "Henry VIII had 6 wives", examBoard: "National" },
+  { id: "h-tu-3", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Tudors", level: 3, description: "Anne Boleyn was Elizabeth I's mother", examBoard: "National" },
+  { id: "h-tu-4", subject: "history", keyStage: "KS2", yearGroup: 6, topic: "Tudors", level: 4, description: "Henry VIII created Church of England", examBoard: "National" },
+  { id: "h-tu-5", subject: "history", keyStage: "KS3", yearGroup: 8, topic: "Tudors", level: 5, description: "Spanish Armada defeated 1588", examBoard: "National" },
+  { id: "h-tu-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Tudors", level: 6, description: "Elizabethan era: culture and exploration", examBoard: "Both" },
+  { id: "h-vc-1", subject: "history", keyStage: "KS2", yearGroup: 3, topic: "Victorians", level: 1, description: "Victorian era was 1837-1901", examBoard: "National" },
+  { id: "h-vc-2", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Victorians", level: 2, description: "Industrial Revolution changed production", examBoard: "National" },
+  { id: "h-vc-3", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Victorians", level: 3, description: "Children worked in mines and factories", examBoard: "National" },
+  { id: "h-vc-4", subject: "history", keyStage: "KS2", yearGroup: 6, topic: "Victorians", level: 4, description: "Railways enabled mass travel", examBoard: "National" },
+  { id: "h-vc-5", subject: "history", keyStage: "KS3", yearGroup: 8, topic: "Victorians", level: 5, description: "Queen Victoria's long reign", examBoard: "National" },
+  { id: "h-vc-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Victorians", level: 6, description: "British Empire and its legacy", examBoard: "Both" },
+  { id: "h-w1-1", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "World War I", level: 1, description: "WWI started in 1914", examBoard: "National" },
+  { id: "h-w1-2", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "World War I", level: 2, description: "Trench warfare", examBoard: "National" },
+  { id: "h-w1-3", subject: "history", keyStage: "KS2", yearGroup: 6, topic: "World War I", level: 3, description: "Assassination of Franz Ferdinand", examBoard: "National" },
+  { id: "h-w1-4", subject: "history", keyStage: "KS3", yearGroup: 7, topic: "World War I", level: 4, description: "WWI ended 1918", examBoard: "National" },
+  { id: "h-w1-5", subject: "history", keyStage: "KS3", yearGroup: 9, topic: "World War I", level: 5, description: "No man's land between trenches", examBoard: "National" },
+  { id: "h-w1-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "World War I", level: 6, description: "Treaty of Versailles consequences", examBoard: "Both" },
+  { id: "h-w2-1", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "World War II", level: 1, description: "WWII started 1939", examBoard: "National" },
+  { id: "h-w2-2", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "World War II", level: 2, description: "The Blitz bombing of cities", examBoard: "National" },
+  { id: "h-w2-3", subject: "history", keyStage: "KS2", yearGroup: 6, topic: "World War II", level: 3, description: "Evacuation of children", examBoard: "National" },
+  { id: "h-w2-4", subject: "history", keyStage: "KS3", yearGroup: 7, topic: "World War II", level: 4, description: "D-Day 6 June 1944", examBoard: "National" },
+  { id: "h-w2-5", subject: "history", keyStage: "KS3", yearGroup: 9, topic: "World War II", level: 5, description: "The Holocaust", examBoard: "National" },
+  { id: "h-w2-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "World War II", level: 6, description: "WWII ended 1945; causes and legacy", examBoard: "Both" },
+  { id: "h-mb-1", subject: "history", keyStage: "KS2", yearGroup: 3, topic: "Medieval Britain", level: 1, description: "William won Battle of Hastings", examBoard: "National" },
+  { id: "h-mb-2", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Medieval Britain", level: 2, description: "Castles for defence and control", examBoard: "National" },
+  { id: "h-mb-3", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Medieval Britain", level: 3, description: "Feudal system hierarchy", examBoard: "National" },
+  { id: "h-mb-4", subject: "history", keyStage: "KS2", yearGroup: 6, topic: "Medieval Britain", level: 4, description: "Black Death pandemic", examBoard: "National" },
+  { id: "h-mb-5", subject: "history", keyStage: "KS3", yearGroup: 8, topic: "Medieval Britain", level: 5, description: "Magna Carta 1215", examBoard: "National" },
+  { id: "h-mb-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Medieval Britain", level: 6, description: "Crusades for the Holy Land", examBoard: "Both" },
+  { id: "h-ag-1", subject: "history", keyStage: "KS2", yearGroup: 3, topic: "Ancient Greece", level: 1, description: "Greek democracy: rule by people", examBoard: "National" },
+  { id: "h-ag-2", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Ancient Greece", level: 2, description: "First Olympics in Olympia", examBoard: "National" },
+  { id: "h-ag-3", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Ancient Greece", level: 3, description: "Greek gods (Zeus, Poseidon)", examBoard: "National" },
+  { id: "h-ag-4", subject: "history", keyStage: "KS2", yearGroup: 6, topic: "Ancient Greece", level: 4, description: "The Parthenon in Athens", examBoard: "National" },
+  { id: "h-ag-5", subject: "history", keyStage: "KS3", yearGroup: 8, topic: "Ancient Greece", level: 5, description: "City-states with own governments", examBoard: "National" },
+  { id: "h-ag-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Ancient Greece", level: 6, description: "Homer's Odyssey; Greek philosophy", examBoard: "Both" },
+  { id: "h-ir-1", subject: "history", keyStage: "KS2", yearGroup: 4, topic: "Industrial Revolution", level: 1, description: "Started about 1760", examBoard: "National" },
+  { id: "h-ir-2", subject: "history", keyStage: "KS2", yearGroup: 5, topic: "Industrial Revolution", level: 2, description: "Steam powered early factories", examBoard: "National" },
+  { id: "h-ir-3", subject: "history", keyStage: "KS2", yearGroup: 6, topic: "Industrial Revolution", level: 3, description: "Began in Britain", examBoard: "National" },
+  { id: "h-ir-4", subject: "history", keyStage: "KS3", yearGroup: 7, topic: "Industrial Revolution", level: 4, description: "Workhouses for the poor", examBoard: "National" },
+  { id: "h-ir-5", subject: "history", keyStage: "KS3", yearGroup: 9, topic: "Industrial Revolution", level: 5, description: "Spinning jenny (Hargreaves)", examBoard: "National" },
+  { id: "h-ir-6", subject: "history", keyStage: "GCSE", yearGroup: 10, topic: "Industrial Revolution", level: 6, description: "Railways transformed society", examBoard: "Both" },
+];
+
+// ===========================
+// GEOGRAPHY (10 topics × 6 levels)
+// ===========================
+export const GEOGRAPHY_OBJECTIVES: CurriculumObjective[] = [
+  { id: "g-con-1", subject: "geography", keyStage: "KS1", yearGroup: 1, topic: "Continents", level: 1, description: "There are 7 continents", examBoard: "National" },
+  { id: "g-con-2", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Continents", level: 2, description: "Asia is the largest continent", examBoard: "National" },
+  { id: "g-con-3", subject: "geography", keyStage: "KS2", yearGroup: 3, topic: "Continents", level: 3, description: "UK is in Europe", examBoard: "National" },
+  { id: "g-con-4", subject: "geography", keyStage: "KS2", yearGroup: 5, topic: "Continents", level: 4, description: "Australia is smallest continent", examBoard: "National" },
+  { id: "g-con-5", subject: "geography", keyStage: "KS3", yearGroup: 8, topic: "Continents", level: 5, description: "The equator and hemispheres", examBoard: "National" },
+  { id: "g-con-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Continents", level: 6, description: "Name and locate all 7 continents", examBoard: "Both" },
+  { id: "g-riv-1", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Rivers", level: 1, description: "Severn is longest UK river", examBoard: "National" },
+  { id: "g-riv-2", subject: "geography", keyStage: "KS2", yearGroup: 3, topic: "Rivers", level: 2, description: "Rivers start at the source", examBoard: "National" },
+  { id: "g-riv-3", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Rivers", level: 3, description: "River mouth meets the sea", examBoard: "National" },
+  { id: "g-riv-4", subject: "geography", keyStage: "KS2", yearGroup: 5, topic: "Rivers", level: 4, description: "Erosion wears away land", examBoard: "National" },
+  { id: "g-riv-5", subject: "geography", keyStage: "KS3", yearGroup: 8, topic: "Rivers", level: 5, description: "Meanders are river bends", examBoard: "National" },
+  { id: "g-riv-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Rivers", level: 6, description: "Flood plains and flood management", examBoard: "Both" },
+  { id: "g-mtn-1", subject: "geography", keyStage: "KS1", yearGroup: 1, topic: "Mountains", level: 1, description: "Everest is tallest mountain", examBoard: "National" },
+  { id: "g-mtn-2", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Mountains", level: 2, description: "Ben Nevis is tallest in UK", examBoard: "National" },
+  { id: "g-mtn-3", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Mountains", level: 3, description: "Tectonic plates form mountains", examBoard: "National" },
+  { id: "g-mtn-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Mountains", level: 4, description: "Volcanoes release magma", examBoard: "National" },
+  { id: "g-mtn-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Mountains", level: 5, description: "Tree line altitude limit", examBoard: "National" },
+  { id: "g-mtn-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Mountains", level: 6, description: "Glaciation shaping landscape", examBoard: "Both" },
+  { id: "g-wea-1", subject: "geography", keyStage: "KS1", yearGroup: 1, topic: "Weather", level: 1, description: "Clouds release rain", examBoard: "National" },
+  { id: "g-wea-2", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Weather", level: 2, description: "Thermometer measures temperature", examBoard: "National" },
+  { id: "g-wea-3", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Weather", level: 3, description: "The water cycle", examBoard: "National" },
+  { id: "g-wea-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Weather", level: 4, description: "Air pressure differences cause wind", examBoard: "National" },
+  { id: "g-wea-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Weather", level: 5, description: "Low pressure weather depressions", examBoard: "National" },
+  { id: "g-wea-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Weather", level: 6, description: "Coriolis effect on wind patterns", examBoard: "Both" },
+  { id: "g-map-1", subject: "geography", keyStage: "KS1", yearGroup: 1, topic: "Maps", level: 1, description: "Map key explains symbols", examBoard: "National" },
+  { id: "g-map-2", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Maps", level: 2, description: "Compass shows direction", examBoard: "National" },
+  { id: "g-map-3", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Maps", level: 3, description: "Contour lines show height", examBoard: "National" },
+  { id: "g-map-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Maps", level: 4, description: "Grid references find locations", examBoard: "National" },
+  { id: "g-map-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Maps", level: 5, description: "6-figure grid references on OS maps", examBoard: "National" },
+  { id: "g-map-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Maps", level: 6, description: "GIS (Geographic Information Systems)", examBoard: "Both" },
+  { id: "g-vol-1", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Volcanoes", level: 1, description: "Lava comes from volcanoes", examBoard: "National" },
+  { id: "g-vol-2", subject: "geography", keyStage: "KS2", yearGroup: 3, topic: "Volcanoes", level: 2, description: "Some volcanoes are dormant", examBoard: "National" },
+  { id: "g-vol-3", subject: "geography", keyStage: "KS2", yearGroup: 5, topic: "Volcanoes", level: 3, description: "Ring of Fire around Pacific", examBoard: "National" },
+  { id: "g-vol-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Volcanoes", level: 4, description: "Magma pressure causes eruptions", examBoard: "National" },
+  { id: "g-vol-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Volcanoes", level: 5, description: "Pyroclastic flows", examBoard: "National" },
+  { id: "g-vol-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Volcanoes", level: 6, description: "Primary/secondary effects of eruptions", examBoard: "Both" },
+  { id: "g-eco-1", subject: "geography", keyStage: "KS1", yearGroup: 1, topic: "Ecosystems", level: 1, description: "Living things and their environment", examBoard: "National" },
+  { id: "g-eco-2", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Ecosystems", level: 2, description: "Food chains: who eats whom", examBoard: "National" },
+  { id: "g-eco-3", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Ecosystems", level: 3, description: "Producers make food from light", examBoard: "National" },
+  { id: "g-eco-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Ecosystems", level: 4, description: "Biodiversity: variety of life", examBoard: "National" },
+  { id: "g-eco-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Ecosystems", level: 5, description: "Deforestation impacts", examBoard: "National" },
+  { id: "g-eco-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Ecosystems", level: 6, description: "Biomes and global ecosystem types", examBoard: "Both" },
+  { id: "g-pop-1", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Population", level: 1, description: "~8 billion people on Earth", examBoard: "National" },
+  { id: "g-pop-2", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Population", level: 2, description: "Population density: people per area", examBoard: "National" },
+  { id: "g-pop-3", subject: "geography", keyStage: "KS2", yearGroup: 5, topic: "Population", level: 3, description: "Migration: moving places", examBoard: "National" },
+  { id: "g-pop-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Population", level: 4, description: "Urbanisation: growth of cities", examBoard: "National" },
+  { id: "g-pop-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Population", level: 5, description: "Population pyramids", examBoard: "National" },
+  { id: "g-pop-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Population", level: 6, description: "Demographic transition model", examBoard: "Both" },
+  { id: "g-res-1", subject: "geography", keyStage: "KS1", yearGroup: 1, topic: "Resources", level: 1, description: "Natural resources from nature", examBoard: "National" },
+  { id: "g-res-2", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Resources", level: 2, description: "Oil is non-renewable", examBoard: "National" },
+  { id: "g-res-3", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Resources", level: 3, description: "Recycling reuses materials", examBoard: "National" },
+  { id: "g-res-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Resources", level: 4, description: "Sustainability for future needs", examBoard: "National" },
+  { id: "g-res-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Resources", level: 5, description: "Food security and access", examBoard: "National" },
+  { id: "g-res-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Resources", level: 6, description: "Water stress: demand exceeding supply", examBoard: "Both" },
+  { id: "g-cc-1", subject: "geography", keyStage: "KS1", yearGroup: 2, topic: "Climate Change", level: 1, description: "Long-term change in weather patterns", examBoard: "National" },
+  { id: "g-cc-2", subject: "geography", keyStage: "KS2", yearGroup: 4, topic: "Climate Change", level: 2, description: "CO₂ causes global warming", examBoard: "National" },
+  { id: "g-cc-3", subject: "geography", keyStage: "KS2", yearGroup: 5, topic: "Climate Change", level: 3, description: "Greenhouse effect traps heat", examBoard: "National" },
+  { id: "g-cc-4", subject: "geography", keyStage: "KS2", yearGroup: 6, topic: "Climate Change", level: 4, description: "Ice melting raises sea levels", examBoard: "National" },
+  { id: "g-cc-5", subject: "geography", keyStage: "KS3", yearGroup: 9, topic: "Climate Change", level: 5, description: "Fossil fuels from ancient organisms", examBoard: "National" },
+  { id: "g-cc-6", subject: "geography", keyStage: "GCSE", yearGroup: 10, topic: "Climate Change", level: 6, description: "Carbon footprint and mitigation", examBoard: "Both" },
+];
+
+// ===========================
+// COMPUTING (10 topics × 6 levels)
+// ===========================
+export const COMPUTING_OBJECTIVES: CurriculumObjective[] = [
+  { id: "c-alg-1", subject: "computing", keyStage: "KS1", yearGroup: 1, topic: "Algorithms", level: 1, description: "Step-by-step instructions", examBoard: "National" },
+  { id: "c-alg-2", subject: "computing", keyStage: "KS1", yearGroup: 2, topic: "Algorithms", level: 2, description: "Sequence: steps in order", examBoard: "National" },
+  { id: "c-alg-3", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Algorithms", level: 3, description: "Loops: repeating instructions", examBoard: "National" },
+  { id: "c-alg-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Algorithms", level: 4, description: "Selection: if/else decisions", examBoard: "National" },
+  { id: "c-alg-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Algorithms", level: 5, description: "Decomposition: breaking problems apart", examBoard: "National" },
+  { id: "c-alg-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Algorithms", level: 6, description: "Abstraction: removing unnecessary detail", examBoard: "Both" },
+  { id: "c-cod-1", subject: "computing", keyStage: "KS1", yearGroup: 1, topic: "Coding Basics", level: 1, description: "Variables store data", examBoard: "National" },
+  { id: "c-cod-2", subject: "computing", keyStage: "KS1", yearGroup: 2, topic: "Coding Basics", level: 2, description: "Bugs are mistakes in code", examBoard: "National" },
+  { id: "c-cod-3", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Coding Basics", level: 3, description: "Debug means fix errors", examBoard: "National" },
+  { id: "c-cod-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Coding Basics", level: 4, description: "Functions: reusable code blocks", examBoard: "National" },
+  { id: "c-cod-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Coding Basics", level: 5, description: "Arrays: ordered list of values", examBoard: "National" },
+  { id: "c-cod-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Coding Basics", level: 6, description: "Iteration and loop constructs", examBoard: "Both" },
+  { id: "c-saf-1", subject: "computing", keyStage: "KS1", yearGroup: 1, topic: "Internet Safety", level: 1, description: "Never share passwords", examBoard: "National" },
+  { id: "c-saf-2", subject: "computing", keyStage: "KS1", yearGroup: 2, topic: "Internet Safety", level: 2, description: "Cyberbullying: being mean online", examBoard: "National" },
+  { id: "c-saf-3", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Internet Safety", level: 3, description: "Tell trusted adult if unsafe", examBoard: "National" },
+  { id: "c-saf-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Internet Safety", level: 4, description: "Phishing: fake emails to steal data", examBoard: "National" },
+  { id: "c-saf-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Internet Safety", level: 5, description: "Two-factor authentication", examBoard: "National" },
+  { id: "c-saf-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Internet Safety", level: 6, description: "Digital footprint and privacy", examBoard: "Both" },
+  { id: "c-dat-1", subject: "computing", keyStage: "KS1", yearGroup: 1, topic: "Data", level: 1, description: "Data is facts and information", examBoard: "National" },
+  { id: "c-dat-2", subject: "computing", keyStage: "KS1", yearGroup: 2, topic: "Data", level: 2, description: "MB stores more than KB", examBoard: "National" },
+  { id: "c-dat-3", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Data", level: 3, description: "Databases organise data", examBoard: "National" },
+  { id: "c-dat-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Data", level: 4, description: "Spreadsheets analyse data", examBoard: "National" },
+  { id: "c-dat-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Data", level: 5, description: "SQL for managing databases", examBoard: "National" },
+  { id: "c-dat-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Data", level: 6, description: "Data types: integer, real, boolean, string", examBoard: "Both" },
+  { id: "c-net-1", subject: "computing", keyStage: "KS1", yearGroup: 1, topic: "Networks", level: 1, description: "Internet is a global network", examBoard: "National" },
+  { id: "c-net-2", subject: "computing", keyStage: "KS1", yearGroup: 2, topic: "Networks", level: 2, description: "WiFi connects wirelessly", examBoard: "National" },
+  { id: "c-net-3", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Networks", level: 3, description: "Servers provide services", examBoard: "National" },
+  { id: "c-net-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Networks", level: 4, description: "IP address identifies computers", examBoard: "National" },
+  { id: "c-net-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Networks", level: 5, description: "Protocols: rules for communication", examBoard: "National" },
+  { id: "c-net-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Networks", level: 6, description: "TCP/IP internet protocols", examBoard: "Both" },
+  { id: "c-bin-1", subject: "computing", keyStage: "KS2", yearGroup: 3, topic: "Binary", level: 1, description: "Binary uses 0 and 1", examBoard: "National" },
+  { id: "c-bin-2", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Binary", level: 2, description: "3 in binary is 11", examBoard: "National" },
+  { id: "c-bin-3", subject: "computing", keyStage: "KS2", yearGroup: 5, topic: "Binary", level: 3, description: "Binary 101 = decimal 5", examBoard: "National" },
+  { id: "c-bin-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Binary", level: 4, description: "8 in binary is 1000", examBoard: "National" },
+  { id: "c-bin-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Binary", level: 5, description: "A byte is 8 bits", examBoard: "National" },
+  { id: "c-bin-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Binary", level: 6, description: "Binary 11111111 = 255", examBoard: "Both" },
+  { id: "c-web-1", subject: "computing", keyStage: "KS2", yearGroup: 3, topic: "Web Design", level: 1, description: "HTML = HyperText Markup Language", examBoard: "National" },
+  { id: "c-web-2", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Web Design", level: 2, description: "CSS styles web pages", examBoard: "National" },
+  { id: "c-web-3", subject: "computing", keyStage: "KS2", yearGroup: 5, topic: "Web Design", level: 3, description: "URL is a web address", examBoard: "National" },
+  { id: "c-web-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Web Design", level: 4, description: "Browsers display web pages", examBoard: "National" },
+  { id: "c-web-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Web Design", level: 5, description: "JavaScript makes pages interactive", examBoard: "National" },
+  { id: "c-web-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Web Design", level: 6, description: "Responsive design for all screens", examBoard: "Both" },
+  { id: "c-spr-1", subject: "computing", keyStage: "KS2", yearGroup: 3, topic: "Spreadsheets", level: 1, description: "Cells hold data", examBoard: "National" },
+  { id: "c-spr-2", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Spreadsheets", level: 2, description: "SUM adds numbers", examBoard: "National" },
+  { id: "c-spr-3", subject: "computing", keyStage: "KS2", yearGroup: 5, topic: "Spreadsheets", level: 3, description: "Formulas calculate in cells", examBoard: "National" },
+  { id: "c-spr-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Spreadsheets", level: 4, description: "Charts show data visually", examBoard: "National" },
+  { id: "c-spr-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Spreadsheets", level: 5, description: "VLOOKUP searches tables", examBoard: "National" },
+  { id: "c-spr-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Spreadsheets", level: 6, description: "Conditional formatting rules", examBoard: "Both" },
+  { id: "c-db-1", subject: "computing", keyStage: "KS2", yearGroup: 3, topic: "Databases", level: 1, description: "Records are rows of data", examBoard: "National" },
+  { id: "c-db-2", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Databases", level: 2, description: "Fields are columns/categories", examBoard: "National" },
+  { id: "c-db-3", subject: "computing", keyStage: "KS2", yearGroup: 5, topic: "Databases", level: 3, description: "Sorting puts data in order", examBoard: "National" },
+  { id: "c-db-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Databases", level: 4, description: "Queries search a database", examBoard: "National" },
+  { id: "c-db-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Databases", level: 5, description: "Primary key: unique identifier", examBoard: "National" },
+  { id: "c-db-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Databases", level: 6, description: "Relational databases with linked tables", examBoard: "Both" },
+  { id: "c-prg-1", subject: "computing", keyStage: "KS1", yearGroup: 1, topic: "Programming", level: 1, description: "Python is a programming language", examBoard: "National" },
+  { id: "c-prg-2", subject: "computing", keyStage: "KS1", yearGroup: 2, topic: "Programming", level: 2, description: "Scratch: visual programming", examBoard: "National" },
+  { id: "c-prg-3", subject: "computing", keyStage: "KS2", yearGroup: 4, topic: "Programming", level: 3, description: "Print shows text on screen", examBoard: "National" },
+  { id: "c-prg-4", subject: "computing", keyStage: "KS2", yearGroup: 6, topic: "Programming", level: 4, description: "IF statements: conditional logic", examBoard: "National" },
+  { id: "c-prg-5", subject: "computing", keyStage: "KS3", yearGroup: 9, topic: "Programming", level: 5, description: "Pseudocode describes algorithms", examBoard: "National" },
+  { id: "c-prg-6", subject: "computing", keyStage: "GCSE", yearGroup: 10, topic: "Programming", level: 6, description: "Object-oriented programming", examBoard: "Both" },
+];
+
+// ===========================
+// LANGUAGES (10 topics × 6 levels)
+// ===========================
+export const LANGUAGES_OBJECTIVES: CurriculumObjective[] = [
+  { id: "l-fg-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "French Greetings", level: 1, description: "Bonjour = Hello", examBoard: "National" },
+  { id: "l-fg-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "French Greetings", level: 2, description: "Au revoir = Goodbye", examBoard: "National" },
+  { id: "l-fg-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "French Greetings", level: 3, description: "Comment ça va? = How are you?", examBoard: "National" },
+  { id: "l-fg-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "French Greetings", level: 4, description: "Je m'appelle = My name is", examBoard: "National" },
+  { id: "l-fg-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "French Greetings", level: 5, description: "Enchanté = Pleased to meet you", examBoard: "National" },
+  { id: "l-fg-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "French Greetings", level: 6, description: "Parlez-vous anglais? = Do you speak English?", examBoard: "Both" },
+  { id: "l-fn-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "French Numbers", level: 1, description: "Trois = Three", examBoard: "National" },
+  { id: "l-fn-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "French Numbers", level: 2, description: "Dix = Ten", examBoard: "National" },
+  { id: "l-fn-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "French Numbers", level: 3, description: "Vingt = 20", examBoard: "National" },
+  { id: "l-fn-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "French Numbers", level: 4, description: "Cinquante = 50", examBoard: "National" },
+  { id: "l-fn-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "French Numbers", level: 5, description: "Cent = 100", examBoard: "National" },
+  { id: "l-fn-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "French Numbers", level: 6, description: "Soixante-dix = 70 (irregular)", examBoard: "Both" },
+  { id: "l-fa-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "French Animals", level: 1, description: "Un chat = A cat", examBoard: "National" },
+  { id: "l-fa-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "French Animals", level: 2, description: "Un chien = A dog", examBoard: "National" },
+  { id: "l-fa-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "French Animals", level: 3, description: "Oiseau = Bird", examBoard: "National" },
+  { id: "l-fa-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "French Animals", level: 4, description: "Un cheval = A horse", examBoard: "National" },
+  { id: "l-fa-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "French Animals", level: 5, description: "Un papillon = A butterfly", examBoard: "National" },
+  { id: "l-fa-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "French Animals", level: 6, description: "Une tortue = A turtle", examBoard: "Both" },
+  { id: "l-ff-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "French Family", level: 1, description: "Mère = Mother", examBoard: "National" },
+  { id: "l-ff-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "French Family", level: 2, description: "Père = Father", examBoard: "National" },
+  { id: "l-ff-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "French Family", level: 3, description: "Frère = Brother", examBoard: "National" },
+  { id: "l-ff-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "French Family", level: 4, description: "Soeur = Sister", examBoard: "National" },
+  { id: "l-ff-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "French Family", level: 5, description: "Grand-mère = Grandmother", examBoard: "National" },
+  { id: "l-ff-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "French Family", level: 6, description: "Les parents = Parents or relatives", examBoard: "Both" },
+  { id: "l-sg-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "Spanish Greetings", level: 1, description: "Hola = Hello", examBoard: "National" },
+  { id: "l-sg-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "Spanish Greetings", level: 2, description: "Adiós = Goodbye", examBoard: "National" },
+  { id: "l-sg-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "Spanish Greetings", level: 3, description: "Gracias = Thank you", examBoard: "National" },
+  { id: "l-sg-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "Spanish Greetings", level: 4, description: "¿Cómo te llamas? = What's your name?", examBoard: "National" },
+  { id: "l-sg-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "Spanish Greetings", level: 5, description: "Buenos días = Good morning", examBoard: "National" },
+  { id: "l-sg-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "Spanish Greetings", level: 6, description: "Mucho gusto = Nice to meet you", examBoard: "Both" },
+  { id: "l-sn-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "Spanish Numbers", level: 1, description: "Uno = One", examBoard: "National" },
+  { id: "l-sn-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "Spanish Numbers", level: 2, description: "Cinco = Five", examBoard: "National" },
+  { id: "l-sn-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "Spanish Numbers", level: 3, description: "Diez = 10", examBoard: "National" },
+  { id: "l-sn-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "Spanish Numbers", level: 4, description: "Veinte = 20", examBoard: "National" },
+  { id: "l-sn-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "Spanish Numbers", level: 5, description: "Cien = 100", examBoard: "National" },
+  { id: "l-sn-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "Spanish Numbers", level: 6, description: "Treinta y tres = 33", examBoard: "Both" },
+  { id: "l-sc-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "Spanish Colours", level: 1, description: "Rojo = Red", examBoard: "National" },
+  { id: "l-sc-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "Spanish Colours", level: 2, description: "Azul = Blue", examBoard: "National" },
+  { id: "l-sc-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "Spanish Colours", level: 3, description: "Verde = Green", examBoard: "National" },
+  { id: "l-sc-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "Spanish Colours", level: 4, description: "Amarillo = Yellow", examBoard: "National" },
+  { id: "l-sc-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "Spanish Colours", level: 5, description: "Blanco = White", examBoard: "National" },
+  { id: "l-sc-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "Spanish Colours", level: 6, description: "Morado = Purple", examBoard: "Both" },
+  { id: "l-sb-1", subject: "languages", keyStage: "KS2", yearGroup: 3, topic: "Sentence Building", level: 1, description: "Je suis = I am (French)", examBoard: "National" },
+  { id: "l-sb-2", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "Sentence Building", level: 2, description: "Yo tengo = I have (Spanish)", examBoard: "National" },
+  { id: "l-sb-3", subject: "languages", keyStage: "KS2", yearGroup: 5, topic: "Sentence Building", level: 3, description: "J'aime = I like/love", examBoard: "National" },
+  { id: "l-sb-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "Sentence Building", level: 4, description: "French adjectives go after noun", examBoard: "National" },
+  { id: "l-sb-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "Sentence Building", level: 5, description: "Me gusta = I like it (Spanish)", examBoard: "National" },
+  { id: "l-sb-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "Sentence Building", level: 6, description: "Conjugation: verb form changes", examBoard: "Both" },
+  { id: "l-vg-1", subject: "languages", keyStage: "KS1", yearGroup: 1, topic: "Vocabulary Games", level: 1, description: "La maison = The house", examBoard: "National" },
+  { id: "l-vg-2", subject: "languages", keyStage: "KS1", yearGroup: 2, topic: "Vocabulary Games", level: 2, description: "La escuela = The school", examBoard: "National" },
+  { id: "l-vg-3", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "Vocabulary Games", level: 3, description: "Le livre = The book", examBoard: "National" },
+  { id: "l-vg-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "Vocabulary Games", level: 4, description: "El agua = The water", examBoard: "National" },
+  { id: "l-vg-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "Vocabulary Games", level: 5, description: "La nourriture = Food", examBoard: "National" },
+  { id: "l-vg-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "Vocabulary Games", level: 6, description: "El tiempo = Time or weather", examBoard: "Both" },
+  { id: "l-cv-1", subject: "languages", keyStage: "KS2", yearGroup: 3, topic: "Conversation", level: 1, description: "Où habites-tu? = Where do you live?", examBoard: "National" },
+  { id: "l-cv-2", subject: "languages", keyStage: "KS2", yearGroup: 4, topic: "Conversation", level: 2, description: "¿Cuántos años tienes? = How old are you?", examBoard: "National" },
+  { id: "l-cv-3", subject: "languages", keyStage: "KS2", yearGroup: 5, topic: "Conversation", level: 3, description: "J'habite à Londres = I live in London", examBoard: "National" },
+  { id: "l-cv-4", subject: "languages", keyStage: "KS2", yearGroup: 6, topic: "Conversation", level: 4, description: "Je ne comprends pas = I don't understand", examBoard: "National" },
+  { id: "l-cv-5", subject: "languages", keyStage: "KS3", yearGroup: 9, topic: "Conversation", level: 5, description: "No entiendo = I don't understand (Sp)", examBoard: "National" },
+  { id: "l-cv-6", subject: "languages", keyStage: "GCSE", yearGroup: 10, topic: "Conversation", level: 6, description: "Il fait beau = The weather is nice", examBoard: "Both" },
+];
+
+// ===========================
+// ART (10 topics × 6 levels)
+// ===========================
+export const ART_OBJECTIVES: CurriculumObjective[] = [
+  { id: "a-col-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Colours", level: 1, description: "Primary colours: red, yellow, blue", examBoard: "National" },
+  { id: "a-col-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Colours", level: 2, description: "Red + Blue = Purple", examBoard: "National" },
+  { id: "a-col-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Colours", level: 3, description: "Warm vs cool colours", examBoard: "National" },
+  { id: "a-col-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Colours", level: 4, description: "Complementary colours", examBoard: "National" },
+  { id: "a-col-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Colours", level: 5, description: "Tint: adding white", examBoard: "National" },
+  { id: "a-col-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Colours", level: 6, description: "Tone: adding grey to colour", examBoard: "Both" },
+  { id: "a-sha-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Shapes", level: 1, description: "Hexagon has 6 sides", examBoard: "National" },
+  { id: "a-sha-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Shapes", level: 2, description: "Sphere is a 3D circle", examBoard: "National" },
+  { id: "a-sha-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Shapes", level: 3, description: "Octagon has 8 sides", examBoard: "National" },
+  { id: "a-sha-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Shapes", level: 4, description: "Symmetry: same on both sides", examBoard: "National" },
+  { id: "a-sha-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Shapes", level: 5, description: "Organic shapes in nature", examBoard: "National" },
+  { id: "a-sha-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Shapes", level: 6, description: "Perspective: depth on flat surface", examBoard: "Both" },
+  { id: "a-art-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Famous Artists", level: 1, description: "Da Vinci painted the Mona Lisa", examBoard: "National" },
+  { id: "a-art-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Famous Artists", level: 2, description: "Van Gogh painted Starry Night", examBoard: "National" },
+  { id: "a-art-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Famous Artists", level: 3, description: "Picasso known for Cubism", examBoard: "National" },
+  { id: "a-art-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Famous Artists", level: 4, description: "Warhol's Campbell's Soup Cans", examBoard: "National" },
+  { id: "a-art-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Famous Artists", level: 5, description: "Monet and Impressionism", examBoard: "National" },
+  { id: "a-art-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Famous Artists", level: 6, description: "Surrealism: dream-like art", examBoard: "Both" },
+  { id: "a-drw-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Drawing", level: 1, description: "Shading adds light and dark", examBoard: "National" },
+  { id: "a-drw-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Drawing", level: 2, description: "Sketch is a quick rough drawing", examBoard: "National" },
+  { id: "a-drw-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Drawing", level: 3, description: "Still life: drawing objects", examBoard: "National" },
+  { id: "a-drw-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Drawing", level: 4, description: "Cross-hatching for shading", examBoard: "National" },
+  { id: "a-drw-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Drawing", level: 5, description: "Proportion: correct size relationships", examBoard: "National" },
+  { id: "a-drw-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Drawing", level: 6, description: "Chiaroscuro: strong light-dark contrast", examBoard: "Both" },
+  { id: "a-pat-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Patterns", level: 1, description: "Pattern is a repeated design", examBoard: "National" },
+  { id: "a-pat-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Patterns", level: 2, description: "Tessellation: no gaps between shapes", examBoard: "National" },
+  { id: "a-pat-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Patterns", level: 3, description: "Motif: repeated design element", examBoard: "National" },
+  { id: "a-pat-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Patterns", level: 4, description: "Radial pattern from centre", examBoard: "National" },
+  { id: "a-pat-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Patterns", level: 5, description: "Islamic geometric patterns", examBoard: "National" },
+  { id: "a-pat-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Patterns", level: 6, description: "Fractals: self-repeating at different scales", examBoard: "Both" },
+  { id: "a-scu-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Sculpture", level: 1, description: "Sculpture is 3D art", examBoard: "National" },
+  { id: "a-scu-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Sculpture", level: 2, description: "Clay is earth/soil-based", examBoard: "National" },
+  { id: "a-scu-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Sculpture", level: 3, description: "Carving: cutting away material", examBoard: "National" },
+  { id: "a-scu-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Sculpture", level: 4, description: "Modelling: building up by hand", examBoard: "National" },
+  { id: "a-scu-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Sculpture", level: 5, description: "Installation: large-scale 3D art", examBoard: "National" },
+  { id: "a-scu-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Sculpture", level: 6, description: "Assemblage: sculpture from found objects", examBoard: "Both" },
+  { id: "a-pho-1", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Photography", level: 1, description: "Camera captures light/images", examBoard: "National" },
+  { id: "a-pho-2", subject: "art", keyStage: "KS2", yearGroup: 3, topic: "Photography", level: 2, description: "Composition: arranging elements", examBoard: "National" },
+  { id: "a-pho-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Photography", level: 3, description: "Rule of thirds grid", examBoard: "National" },
+  { id: "a-pho-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Photography", level: 4, description: "Depth of field: focus area", examBoard: "National" },
+  { id: "a-pho-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Photography", level: 5, description: "Aperture: lens opening", examBoard: "National" },
+  { id: "a-pho-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Photography", level: 6, description: "ISO: sensor light sensitivity", examBoard: "Both" },
+  { id: "a-prn-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Printmaking", level: 1, description: "Pressing/stamping creates prints", examBoard: "National" },
+  { id: "a-prn-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Printmaking", level: 2, description: "Lino print: carved linoleum", examBoard: "National" },
+  { id: "a-prn-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Printmaking", level: 3, description: "Mono-printing: one unique print", examBoard: "National" },
+  { id: "a-prn-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Printmaking", level: 4, description: "Screen printing through mesh", examBoard: "National" },
+  { id: "a-prn-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Printmaking", level: 5, description: "Edition: set of identical prints", examBoard: "National" },
+  { id: "a-prn-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Printmaking", level: 6, description: "Etching: acid on metal", examBoard: "Both" },
+  { id: "a-tex-1", subject: "art", keyStage: "KS1", yearGroup: 1, topic: "Textiles", level: 1, description: "Textiles are fabrics", examBoard: "National" },
+  { id: "a-tex-2", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Textiles", level: 2, description: "Weaving interlaces threads", examBoard: "National" },
+  { id: "a-tex-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Textiles", level: 3, description: "Tie-dye patterns", examBoard: "National" },
+  { id: "a-tex-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Textiles", level: 4, description: "Batik: wax-resist dyeing", examBoard: "National" },
+  { id: "a-tex-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Textiles", level: 5, description: "Embroidery with needle and thread", examBoard: "National" },
+  { id: "a-tex-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Textiles", level: 6, description: "Appliqué: attaching fabric pieces", examBoard: "Both" },
+  { id: "a-his-1", subject: "art", keyStage: "KS1", yearGroup: 2, topic: "Art History", level: 1, description: "Cave paintings: tens of thousands of years old", examBoard: "National" },
+  { id: "a-his-2", subject: "art", keyStage: "KS2", yearGroup: 3, topic: "Art History", level: 2, description: "Renaissance: rebirth of art", examBoard: "National" },
+  { id: "a-his-3", subject: "art", keyStage: "KS2", yearGroup: 4, topic: "Art History", level: 3, description: "Renaissance began in Italy", examBoard: "National" },
+  { id: "a-his-4", subject: "art", keyStage: "KS2", yearGroup: 6, topic: "Art History", level: 4, description: "Pop Art: based on popular culture", examBoard: "National" },
+  { id: "a-his-5", subject: "art", keyStage: "KS3", yearGroup: 9, topic: "Art History", level: 5, description: "Contemporary art: made now", examBoard: "National" },
+  { id: "a-his-6", subject: "art", keyStage: "GCSE", yearGroup: 10, topic: "Art History", level: 6, description: "Conceptual art: ideas matter most", examBoard: "Both" },
+];
+
+// ===========================
+// COMBINED
+// ===========================
 export const ALL_OBJECTIVES: CurriculumObjective[] = [
   ...MATHS_OBJECTIVES,
   ...ENGLISH_OBJECTIVES,
+  ...SCIENCE_OBJECTIVES,
+  ...HISTORY_OBJECTIVES,
+  ...GEOGRAPHY_OBJECTIVES,
+  ...COMPUTING_OBJECTIVES,
+  ...LANGUAGES_OBJECTIVES,
+  ...ART_OBJECTIVES,
 ];
 
-// Helper: Given a child's topic progress data, compute which objectives they've mastered.
-// Mastery rule: at least 5 attempts at the required level (or higher), with ≥ 80% accuracy.
-// We approximate this using topic_progress records and current child level.
+export const CURRICULUM_SUBJECTS: CurriculumSubject[] = ["maths", "english", "science", "history", "geography", "computing", "languages", "art"];
 
+// Helper functions
 export interface ObjectiveProgress {
   objective: CurriculumObjective;
   status: "mastered" | "in_progress" | "not_started";
@@ -208,43 +575,27 @@ export function computeObjectiveProgress(
   childCurrentLevel: number
 ): ObjectiveProgress {
   const accuracy = topicAttempts > 0 ? topicCorrect / topicAttempts : 0;
-
-  // Must be at or past the level this objective represents
   const reachedLevel = childCurrentLevel >= objective.level;
-
   let status: "mastered" | "in_progress" | "not_started" = "not_started";
-
-  if (!reachedLevel && topicAttempts === 0) {
-    status = "not_started";
-  } else if (reachedLevel && topicAttempts >= 5 && accuracy >= 0.8) {
-    status = "mastered";
-  } else if (topicAttempts > 0) {
-    status = "in_progress";
-  } else {
-    status = "not_started";
-  }
-
+  if (!reachedLevel && topicAttempts === 0) status = "not_started";
+  else if (reachedLevel && topicAttempts >= 5 && accuracy >= 0.8) status = "mastered";
+  else if (topicAttempts > 0) status = "in_progress";
   return { objective, status, attempts: topicAttempts, accuracy };
 }
 
 export function summariseSubject(
-  subject: "maths" | "english",
+  subject: CurriculumSubject,
   progressList: ObjectiveProgress[]
 ) {
-  const subjectObjectives = progressList.filter((p) => p.objective.subject === subject);
-  const mastered = subjectObjectives.filter((p) => p.status === "mastered").length;
-  const inProgress = subjectObjectives.filter((p) => p.status === "in_progress").length;
-  const notStarted = subjectObjectives.filter((p) => p.status === "not_started").length;
+  const subjectObjectives = progressList.filter(p => p.objective.subject === subject);
+  const mastered = subjectObjectives.filter(p => p.status === "mastered").length;
+  const inProgress = subjectObjectives.filter(p => p.status === "in_progress").length;
+  const notStarted = subjectObjectives.filter(p => p.status === "not_started").length;
   const total = subjectObjectives.length;
-
-  const gcseObjectives = subjectObjectives.filter((p) => p.objective.keyStage === "GCSE");
-  const gcseMastered = gcseObjectives.filter((p) => p.status === "mastered").length;
-
+  const gcseObjectives = subjectObjectives.filter(p => p.objective.keyStage === "GCSE");
+  const gcseMastered = gcseObjectives.filter(p => p.status === "mastered").length;
   return {
-    total,
-    mastered,
-    inProgress,
-    notStarted,
+    total, mastered, inProgress, notStarted,
     percentComplete: total > 0 ? Math.round((mastered / total) * 100) : 0,
     gcseTotal: gcseObjectives.length,
     gcseMastered,
