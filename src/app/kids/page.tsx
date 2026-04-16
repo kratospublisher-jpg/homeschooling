@@ -5,6 +5,7 @@ import { SUBJECTS, DIFFICULTY_LEVELS, AVATARS, type Child, type DailyProgress } 
 import { generateQuestion, ENCOURAGEMENTS, WRONG_ENCOURAGEMENTS, type Question } from "@/lib/questions";
 import { getAllChildren, createChild, getDailyProgress, upsertDailyProgress, updateChildXP, incrementTopicProgress, getScheduleCompletions, toggleScheduleBlock } from "@/lib/db";
 import { getScheduleForAge, getDayThemedBlocks, WEEKLY_THEMES, type ScheduleBlock } from "@/lib/schedule";
+import { getTeachingExample } from "@/lib/teaching";
 
 export default function KidsApp() {
   const [screen, setScreen] = useState<string>("splash");
@@ -28,6 +29,9 @@ export default function KidsApp() {
   const [dailyProgress, setDailyProgress] = useState<DailyProgress>({ total_questions: 0, total_correct: 0, xp: 0, subjects: {} });
   const [loading, setLoading] = useState(true);
   const [completedBlocks, setCompletedBlocks] = useState<string[]>([]);
+  const [isRetrying, setIsRetrying] = useState(false);
+  const [showTeaching, setShowTeaching] = useState(false);
+  const [quizWrongCount, setQuizWrongCount] = useState(0);
 
   useEffect(() => { loadData(); }, []);
 
@@ -89,6 +93,7 @@ export default function KidsApp() {
     setSelectedSubject(subject); setSelectedTopic(topic);
     setQuestionsAnswered(0); setCorrectCount(0); setStreak(0);
     setSelectedAnswer(null); setIsCorrect(null);
+    setIsRetrying(false); setShowTeaching(false); setQuizWrongCount(0);
     const t = dailyProgress.subjects?.[subject]?.topics?.[topic];
     const attempts = t?.questions || 0;
     const accuracy = attempts > 0 ? (t!.correct / attempts) : 0.5;
@@ -120,6 +125,8 @@ export default function KidsApp() {
       triggerConfetti();
       setXpAnimation(true);
       setTimeout(() => setXpAnimation(false), 1000);
+    } else {
+      setQuizWrongCount(quizWrongCount + 1);
     }
 
     setQuestionsAnswered(questionsAnswered + 1);
@@ -153,9 +160,34 @@ export default function KidsApp() {
     await incrementTopicProgress(currentChild.id, selectedSubject, selectedTopic, correct, newStreak);
   };
 
+  const retryQuestion = () => {
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setIsRetrying(true);
+  };
+
   const nextQuestion = () => {
     if (questionsAnswered >= 5) { setShowReport(true); return; }
-    setSelectedAnswer(null); setIsCorrect(null);
+    setSelectedAnswer(null); setIsCorrect(null); setIsRetrying(false);
+
+    // Check if we should show a teaching example
+    // Trigger: 2+ wrong out of questions answered so far AND accuracy below 40%
+    const quizAcc = questionsAnswered > 0 ? correctCount / questionsAnswered : 1;
+    if (quizWrongCount >= 2 && quizAcc < 0.4 && !showTeaching) {
+      setShowTeaching(true);
+      return;
+    }
+
+    setShowTeaching(false);
+    const t = dailyProgress.subjects?.[selectedSubject!]?.topics?.[selectedTopic!];
+    const attempts = t?.questions || 0;
+    const accuracy = attempts > 0 ? (t!.correct / attempts) : 0.5;
+    setCurrentQuestion(generateQuestion(selectedSubject!, selectedTopic!, currentChild!.level, accuracy, attempts));
+  };
+
+  const dismissTeaching = () => {
+    setShowTeaching(false);
+    setQuizWrongCount(0); // Reset so it doesn't trigger again immediately
     const t = dailyProgress.subjects?.[selectedSubject!]?.topics?.[selectedTopic!];
     const attempts = t?.questions || 0;
     const accuracy = attempts > 0 ? (t!.correct / attempts) : 0.5;
@@ -443,7 +475,7 @@ export default function KidsApp() {
       {screen === "quiz" && currentQuestion && selectedSubject && (
         <div style={{ maxWidth: 600, margin: "0 auto", padding: "20px 16px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <button onClick={() => { setScreen("topics"); setShowReport(false); }} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "white", padding: "8px 16px", borderRadius: 12, cursor: "pointer", fontSize: 13 }}>✕ Quit</button>
+            <button onClick={() => { setScreen("topics"); setShowReport(false); setShowTeaching(false); }} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "white", padding: "8px 16px", borderRadius: 12, cursor: "pointer", fontSize: 13 }}>✕ Quit</button>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               {streak > 1 && <span style={{ fontSize: 14, color: "#F59E0B", fontWeight: 800 }}>🔥{streak}</span>}
               <span style={{ fontSize: 14, opacity: 0.7 }}>Q{questionsAnswered + 1}/5</span>
@@ -452,10 +484,43 @@ export default function KidsApp() {
           <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 8, height: 6, marginBottom: 32, overflow: "hidden" }}>
             <div style={{ height: "100%", borderRadius: 8, transition: "width 0.5s ease", background: SUBJECTS[selectedSubject].gradient, width: `${(questionsAnswered / 5) * 100}%` }} />
           </div>
+
+          {/* TEACHING EXAMPLE SCREEN */}
+          {showTeaching && selectedTopic && currentChild && (() => {
+            const example = getTeachingExample(selectedSubject, selectedTopic, currentChild.level);
+            return (
+              <div style={{ animation: "bounceIn 0.5s ease" }}>
+                <div style={{ textAlign: "center", marginBottom: 20 }}>
+                  <div style={{ fontSize: 56, marginBottom: 8 }}>📝</div>
+                  <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 24, margin: "0 0 8px" }}>Let&apos;s Learn Together!</h3>
+                  <p style={{ fontSize: 14, opacity: 0.7 }}>This topic is tricky — here&apos;s a quick lesson before your next question.</p>
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 20, padding: 24, border: "1px solid rgba(255,255,255,0.15)", marginBottom: 16 }}>
+                  <div style={{ fontSize: 13, textTransform: "uppercase", fontWeight: 800, opacity: 0.6, letterSpacing: 1, marginBottom: 8 }}>💡 The Idea</div>
+                  <p style={{ fontSize: 16, lineHeight: 1.6, margin: 0 }}>{example.explanation}</p>
+                </div>
+                <div style={{ background: "rgba(16, 185, 129, 0.12)", borderRadius: 20, padding: 24, border: "1px solid rgba(16, 185, 129, 0.3)", marginBottom: 16 }}>
+                  <div style={{ fontSize: 13, textTransform: "uppercase", fontWeight: 800, color: "#10B981", letterSpacing: 1, marginBottom: 8 }}>✏️ Worked Example</div>
+                  <p style={{ fontSize: 16, lineHeight: 1.8, margin: 0, whiteSpace: "pre-wrap" }}>{example.workedExample}</p>
+                </div>
+                <div style={{ background: "rgba(251, 191, 36, 0.12)", borderRadius: 20, padding: 20, border: "1px solid rgba(251, 191, 36, 0.3)", marginBottom: 24 }}>
+                  <div style={{ fontSize: 13, textTransform: "uppercase", fontWeight: 800, color: "#FBBF24", letterSpacing: 1, marginBottom: 6 }}>⭐ Top Tip</div>
+                  <p style={{ fontSize: 15, lineHeight: 1.5, margin: 0 }}>{example.tip}</p>
+                </div>
+                <button onClick={dismissTeaching} className="btn-hover" style={{ width: "100%", padding: 16, fontSize: 17, fontWeight: 800, border: "none", borderRadius: 50, background: "linear-gradient(135deg, #10B981, #34D399)", color: "white", cursor: "pointer" }}>
+                  Got It! Let&apos;s Try Again 💪
+                </button>
+              </div>
+            );
+          })()}
+
+          {/* QUESTION SCREEN (hidden when teaching) */}
+          {!showTeaching && <>
           <div style={{ textAlign: "center", marginBottom: 8 }}>
             <span style={{ fontSize: 12, fontWeight: 700, padding: "4px 14px", borderRadius: 20, background: `${SUBJECTS[selectedSubject].color}33`, border: `1px solid ${SUBJECTS[selectedSubject].color}44` }}>
               {SUBJECTS[selectedSubject].icon} {SUBJECTS[selectedSubject].name} · {selectedTopic}
             </span>
+            {isRetrying && <span style={{ fontSize: 11, marginLeft: 8, padding: "3px 10px", borderRadius: 12, background: "rgba(251,191,36,0.2)", color: "#FBBF24", fontWeight: 700 }}>🔄 Retry</span>}
           </div>
           <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 24, padding: "clamp(24px, 5vw, 36px)", border: "1px solid rgba(255,255,255,0.1)", marginBottom: 24, textAlign: "center", animation: "bounceIn 0.5s ease" }}>
             <h3 style={{ fontSize: "clamp(18px, 4.5vw, 24px)", fontWeight: 800, margin: 0, lineHeight: 1.4 }}>{currentQuestion.q}</h3>
@@ -482,11 +547,19 @@ export default function KidsApp() {
               </p>
               {!isCorrect && <p style={{ fontSize: 14, opacity: 0.7, margin: "4px 0 0" }}>The answer was: <strong>{currentQuestion.answer}</strong></p>}
               {xpAnimation && <div style={{ fontSize: 24, fontWeight: 900, color: "#ffd700", animation: "xpFloat 1s ease forwards" }}>+{10 + streak * 2} XP</div>}
-              <button onClick={nextQuestion} className="btn-hover" style={{ marginTop: 16, padding: "14px 40px", fontSize: 17, fontWeight: 800, border: "none", borderRadius: 50, background: "linear-gradient(135deg, #A78BFA, #EC4899)", color: "white", cursor: "pointer", transition: "all 0.3s" }}>
-                {questionsAnswered >= 5 ? "See Results! 🏆" : "Next Question →"}
-              </button>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
+                {!isCorrect && !isRetrying && (
+                  <button onClick={retryQuestion} className="btn-hover" style={{ padding: "14px 32px", fontSize: 16, fontWeight: 800, border: "2px solid #FBBF24", borderRadius: 50, background: "transparent", color: "#FBBF24", cursor: "pointer", transition: "all 0.3s" }}>
+                    🔄 Try Again
+                  </button>
+                )}
+                <button onClick={nextQuestion} className="btn-hover" style={{ padding: "14px 40px", fontSize: 17, fontWeight: 800, border: "none", borderRadius: 50, background: "linear-gradient(135deg, #A78BFA, #EC4899)", color: "white", cursor: "pointer", transition: "all 0.3s" }}>
+                  {questionsAnswered >= 5 ? "See Results! 🏆" : "Next Question →"}
+                </button>
+              </div>
             </div>
           )}
+          </>}
         </div>
       )}
 
